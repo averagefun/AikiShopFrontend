@@ -1,0 +1,1 @@
+# AikiShop - Frontend (React TypeScript + Redux Toolkit)

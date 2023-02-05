@@ -1,0 +1,32 @@
+.cartPage {
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px 15px;
+  }
+
+  &__item-img {
+    grid-area: 1 / 1 / 3 / 2;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__item-name {
+    grid: 1/2;
+  }
+
+  &__item-price {
+
+  }
+}

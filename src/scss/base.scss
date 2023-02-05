@@ -1,0 +1,201 @@
+@use "sass:math";
+
+// VAR VAR VAR
+// VAR VAR VAR
+// VAR VAR VAR
+
+// colors
+$black: #111;
+$gray: #686868;
+$white: #fff;
+$black-trans: #111e;
+
+// media breakpoints
+$mb: 520px; // 320px - 520px Mobile
+$tb: 768px; // 481px - 768px Tablets
+$lp: 1024px; // 769px - 1024px Laptops
+$dk: 1200px; // 1025px - 1200px Desktops
+
+// MIXIN && FUNCTIONS
+// MIXIN && FUNCTIONS
+// MIXIN && FUNCTIONS
+@function prc($value, $base) {
+    $prcValue: math.div($value, $base) + "%";
+    @return $prcValue;
+}
+
+@function em($value) {
+    $emValue: math.div($value, 16) + em;
+    @return $emValue;
+}
+
+@function emb($value, $base) {
+    $emValue: math.div($value, $base) + em;
+    @return $emValue;
+}
+
+@function rem($value) {
+    $remValue: math.div($value, 16) + rem;
+    @return $remValue;
+}
+
+@mixin flex-cards($grow, $shrink, $num, $gap) {
+    flex: $grow $shrink calc((100% - ((#{$num} - 1) * #{$gap})) / #{$num});
+}
+
+// STYLE STYLE
+// STYLE STYLE
+// STYLE STYLE
+
+body {
+    font-family: "Golos", sans-serif;
+    color: $black;
+    background: $white;
+
+    &._lock {
+        overflow: hidden;
+    }
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: grid;
+    grid-template: minmax(50px, auto) 1fr minmax(50px, auto) / 1fr;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+}
+
+.container {
+    box-sizing: content-box;
+    max-width: rem(1280);
+    min-width: 300px;
+    padding: 0 rem(15);
+    margin: 0 auto;
+}
+
+.primary-container {
+    --ver-padding: 30px;
+
+    padding-top: var(--ver-padding);
+    padding-bottom: var(--ver-padding);
+
+    @media screen and (max-width: $dk) {
+        --ver-padding: 20px;
+    }
+
+    display: flex;
+    justify-content: space-between;
+    column-gap: rem(25);
+
+    --sbwidth: 300px;
+    &__sidebar {
+        flex: 0 0 var(--sbwidth);
+
+        @media screen and (max-width: $lp) {
+            --sbwidth: 270px;
+        }
+
+        @media screen and (max-width: 850px) {
+            display: none;
+        }
+    }
+
+    &__main {
+        flex-grow: 1;
+    }
+}
+
+// Common tags
+a {
+    color: $black;
+}
+
+// Common classes
+
+.black-price {
+    font-size: rem(24);
+    font-weight: 700;
+
+    background: $black;
+    color: #fff;
+    padding: 5px 20px;
+}
+
+.underline_anim {
+    $underline-height: em(1.8);
+
+    background-image: linear-gradient($black, $black), linear-gradient($white, $white);
+    background-size: 0 $underline-height, auto;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    transition: background-size 0.25s ease-out 0.1s;
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: #111;
+        background-size: 100% $underline-height, auto;
+        transition: background-size 0.2s ease-out;
+    }
+}
+
+// Swiper
+
+:root {
+    --swiper-theme-color: $black;
+    --swiper-navigation-color: $black;
+    --swiper-pagination-color: $black;
+    --swiper-navigation-size: 30px;
+
+    @media screen and (max-width: $dk) {
+        --swiper-navigation-size: 25px;
+    }
+
+    @media screen and (max-width: $tb) {
+        --swiper-navigation-size: 20px;
+    }
+}
+
+.swiper-pagination-bullet {
+    width: rem(12);
+    height: rem(12);
+
+    &-active {
+        background: $black-trans;
+    }
+}
+
+.swiper {
+    width: 100%;
+
+    &-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.swiper-button {
+    &-prev {
+        @media screen and (max-width: $mb) {
+            display: none;
+        }
+    }
+    &-next {
+        @media screen and (max-width: $mb) {
+            display: none;
+        }
+    }
+}
+
+// Buttons
+
+.black-button {
+    background: $black;
+    color: $white;
+    border-radius: 30px;
+    padding: 14px 20px;
+    font-size: rem(18);
+}

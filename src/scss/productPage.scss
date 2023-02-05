@@ -1,0 +1,265 @@
+.productPage {
+  padding: 12px 0 20px;
+
+  &__title {
+    font-size: rem(30);
+    font-weight: 700;
+    margin: 27px 0;
+  }
+
+  &__content {
+    display: flex;
+    align-items: stretch;
+    column-gap: 60px;
+
+    @media screen and (max-width: $lp){
+      column-gap: 40px;
+    }
+
+    @media screen and (max-width: $tb){
+      column-gap: 30px;
+    }
+
+    @media screen and (max-width: $mb){
+      flex-direction: column;
+    }
+
+    @media screen and (max-width: $mb){
+      width: 100%;
+    }
+  }
+
+  &__info {}
+
+  &__imageSlider {
+    width: 500px;
+    height: 80vh;
+    max-height: 500px;
+
+    @media screen and (max-width: $lp){
+      width: 400px;
+    }
+
+    @media screen and (max-width: $tb){
+      width: 300px;
+    }
+
+    @media screen and (max-width: $mb){
+      width: 100%;
+    }
+  }
+}
+
+.imageSlider {
+  .swiper-slide {
+    background-size: cover;
+    background-position: center;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__swiper-main {
+    height: 80%;
+    width: 100%;
+
+    border-radius: 25px;
+
+    .swiper-slide {
+      @media screen and (max-width: $mb){
+        width: 100% !important;
+      }
+    }
+  }
+
+  &__swiper-thumbs {
+    height: 16%;
+    box-sizing: border-box;
+    padding: 10px 0;
+
+    .swiper-slide {
+      width: 25%;
+      height: 100%;
+      opacity: 0.4;
+
+      img {
+        border-radius: 7px;
+      }
+    }
+
+    .swiper-slide-thumb-active {
+      opacity: 1 !important;
+    }
+  }
+}
+
+
+.cubeSlider {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -150px;
+  margin-top: -150px;
+
+  &__slide {
+    background-position: center;
+    background-size: cover;
+
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+
+  &__price {
+    align-self: flex-start;
+    border-radius: 20px;
+    padding: 7px 20px;
+    margin-bottom: 13px;
+  }
+
+  &__header {
+    font-size: rem(18);
+  }
+
+  &__features {
+    li {
+      font-size: rem(17);
+      line-height: 1.1;
+      padding: rem(2) 0;
+
+      &::before {
+        content: '•';
+        display: inline-block;
+        width: 1em;
+        font-size: 25px;
+      }
+    }
+  }
+
+  &__product-cart {
+  }
+}
+
+.product-cart {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20);
+
+  &__size {
+
+    &-title {
+      font-size: rem(18);
+      margin: rem(7) 0 rem(17);
+    }
+
+    &-list {
+      display: flex;
+      gap: 10px;
+    }
+
+    &-item {
+      cursor: pointer;
+      font-size: rem(18);
+      width: rem(35);
+      height: rem(35);
+      text-align: center;
+      line-height: rem(35);
+
+      color: $white;
+      background: #1114;
+      border-radius: 100%;
+
+      &._active {
+        background: $black;
+      }
+
+      &.crossed-circle {
+        position: relative;
+        cursor: default;
+
+        &:before {
+          position: absolute;
+          content: '';
+          top: rem(16);
+          left: rem(3);
+          background: $black-trans;
+          width: rem(30);
+          height: 1px;
+          transform: rotate(45deg);
+        }
+
+        &:after {
+          position: absolute;
+          content: '';
+          top: rem(16);
+          left: rem(3);
+          background: $black-trans;
+          width: rem(30);
+          height: 1px;
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  &__bottom {
+    margin: rem(10) 0;
+  }
+
+  &__counter {
+    display: inline-flex;
+    justify-content: space-between;
+    border: 2px solid $black;
+    border-radius: 30px;
+  }
+
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  &__btn {
+  }
+}
+
+.counter {
+  &__input {
+    display: block;
+    color: $white;
+    background: $black;
+    text-align: center;
+    padding: 0 10px;
+    width: 55px;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__button {
+    display: block;
+    padding: 15px 20px;
+
+    svg {
+      $size: 10px;
+      width: $size;
+      height: $size;
+    }
+  }
+}
