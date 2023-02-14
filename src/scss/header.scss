@@ -1,7 +1,8 @@
 $header-height: rem(72);
 
 .header {
-  background: $white;
+  //background: $white;
+  background: url("../assets/background/background.jpg");
   box-shadow: 0 0 4px 0 #aaa;
   font-size: rem(21);
 
@@ -21,10 +22,11 @@ $header-height: rem(72);
 
     &._active {
       z-index: 11;
+      background: none;
 
       a {
         color: $white;
-        background-image: none;
+        background: none;
         transition: color 0.2s ease;
 
         &:hover,

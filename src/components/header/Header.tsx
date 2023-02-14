@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {NavLink} from "react-router-dom";
 
 function Header() {
-    const iconMenuHandler = () => {
+    const [mobileMenuActive, setMobileMenuActive] = useState(false);
+
+    const displayMobileMenu = () => {
         const menuIcon = document.querySelector('.menu__icon');
         const headerLogo = document.querySelector('.header__logo');
         const menuBody = document.querySelector('.menu__body');
@@ -13,17 +15,19 @@ function Header() {
         if (menuBody) menuBody.classList.toggle('_active');
         document.body.classList.toggle('_lock');
 
-        if (menuCart && menuIcon && menuIcon.classList.contains('_active')) {
+        if (menuCart && !mobileMenuActive) {
             if (menuCart.parentElement) {
                 menuCart.parentElement.style.zIndex = "12";
             }
             setTimeout(() => {
-                menuCart.src = require('../../assets/cart-white.png');
+                menuCart.src = require('../../assets/icons/cart-white.png');
             }, 170)
 
         } else if (menuCart) {
-            menuCart.src = require('../../assets/cart-black.png');
+            menuCart.src = require('../../assets/icons/cart-black.png');
         }
+
+        setMobileMenuActive(!mobileMenuActive);
     }
 
     return (
@@ -37,13 +41,28 @@ function Header() {
 
                         <div className="menu__body">
                             <ul className="menu__list">
-                                <li className="menu__item underline_anim"><NavLink to="/">Каталог</NavLink></li>
-                                <li className="menu__item underline_anim"><NavLink to="/contacts">Контакты</NavLink></li>
-                                <li className="menu__item underline_anim"><NavLink to="/orderStatus">Статус заказа</NavLink></li>
+                                <li className="menu__item underline_anim">
+                                    <NavLink
+                                        onClick={mobileMenuActive ? displayMobileMenu : void (0)} to="/">Каталог
+                                    </NavLink>
+                                </li>
+                                <li className="menu__item underline_anim">
+                                    <NavLink
+                                        onClick={mobileMenuActive ? displayMobileMenu : void (0)}
+                                        to="/">Контакты
+                                    </NavLink>
+                                </li>
+                                <li className="menu__item underline_anim">
+                                    <NavLink
+                                        onClick={mobileMenuActive ? displayMobileMenu : void (0)} to="/">Статус
+                                        заказа
+                                    </NavLink>
+                                </li>
                             </ul>
                         </div>
-                        <NavLink className="menu__cart" to="/cart"><img src={require('../../assets/cart-black.png')} alt=""/></NavLink>
-                        <div className="menu__icon" onClick={iconMenuHandler}>
+                        <NavLink onClick={mobileMenuActive ? displayMobileMenu : void (0)} className="menu__cart"
+                                 to="/"><img src={require('../../assets/icons/cart-black.png')} alt=""/></NavLink>
+                        <div className="menu__icon" onClick={displayMobileMenu}>
                             <span/>
                         </div>
                     </nav>

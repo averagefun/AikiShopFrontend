@@ -6,6 +6,7 @@ import ProductCart from "./ProductCart";
 import {useGetProductQuery} from "src/store/api/spring.api";
 import ProductImageSlider from "./ProductImageSlider";
 import {useParams} from "react-router-dom";
+import {motion} from "framer-motion";
 
 function ProductPage() {
     const {id} = useParams();
@@ -17,7 +18,11 @@ function ProductPage() {
         const features: IProductFeature[] = product.features;
 
         return (
-            <main className="productPage">
+            <motion.main className="productPage"
+                         initial={{opacity: 0}}
+                         animate={{opacity: 1}}
+                         exit={{opacity: 0}}
+            >
                 <div className="container">
                     <h1 className="productPage__title">{product.name}</h1>
 
@@ -47,7 +52,7 @@ function ProductPage() {
                         </div>
                     </div>
                 </div>
-            </main>
+            </motion.main>
         );
     } else {
         return (

@@ -4,7 +4,7 @@ import {IProduct} from "src/types/interfaces";
 export const springApi = createApi({
     reducerPath: "spring/api",
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://aikishoes.ru/api"
+        baseUrl: "https://aikishoes.ru/api",
     }),
     endpoints: build => ({
         getProducts: build.query<IProduct[], null>({

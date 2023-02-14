@@ -12,6 +12,7 @@ export interface IProductSize {
 export interface IProductImage {
     id?: number;
     imagePath: string;
+    alt: string;
     priority: number;
 }
 

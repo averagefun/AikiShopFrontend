@@ -29,7 +29,7 @@ function ProductImageSlider(props: ProductImageSliderProps) {
             >
                 {props.images.map((image, i) => (
                     <SwiperSlide key={i}>
-                        <img src={image.imagePath} alt="Изображение товара"/>
+                        <img src={image.imagePath} alt={image.alt}/>
                     </SwiperSlide>
                 ))}
             </Swiper>

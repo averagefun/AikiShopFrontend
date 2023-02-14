@@ -13,7 +13,7 @@ function ProductCard(props: ProductCardProps) {
     return (
         <Link to={`/product/${props.product.id}`} className={`${props.className} product`}>
             <div className="product__wrapper">
-                <img className="product__image" src={mainImage.imagePath} alt="Изображение товара"/>
+                <img className="product__image" src={mainImage.imagePath} alt={mainImage.alt}/>
                 <div className="product__blackout"/>
                 <div className="product__price black-price">
                     <span>{props.product.price} ₽</span>
