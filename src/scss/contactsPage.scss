@@ -1,0 +1,29 @@
+.contactsPage {
+  &__title {
+    font-size: rem(30);
+    font-weight: 700;
+    margin: 23px 0;
+
+    @media screen and (max-width: $mb) {
+      margin: 20px 0;
+    }
+  }
+
+  &__body {
+    margin-bottom: 20px;
+  }
+
+  &__contact {
+    font-size: rem(19);
+    line-height: 1.2;
+
+    a {
+      font-size: rem(18);
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    margin: 10px 0;
+  }
+}

@@ -8,16 +8,13 @@ function About(props: AboutProps) {
     return (
         <div className={`${props.className} about`}>
             <p className="about__paragraph">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Animi consequatur iusto magni omnis quam soluta suscipit tempore.
-                Aperiam aspernatur culpa ducimus ea illum necessitatibus officia placeat quia quod ullam.
-                Corporis deserunt dolorum eligendi maiores officia recusandae similique? Accusamus corporis
-                cupiditate doloremque.
+                «Aiki» - российский бренд производства обуви. Мы уверены в своем качестве и подтверждаем это
+                гарантией: в то время как средний гарантийный срок обуви составляет не более 90 дней, мы даем 1 год
+                на выявление любых возможных дефектов ботинок.
             </p>
             <p className="about__paragraph">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Animi consequatur iusto magni omnis quam soluta suscipit tempore.
-                Aperiam aspernatur culpa ducimus ea illum necessitatibus officia placeat quia quod.
+                Секрет надежности и долговечности ботинок заключается в высококачественных
+                идеально-подобранных компонентах, а также в процессе сборки ботинок. Используется натуральная кожа...
             </p>
         </div>
     );

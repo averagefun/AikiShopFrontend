@@ -61,7 +61,7 @@ function Header() {
                             </ul>
                         </nav>
                         <NavLink onClick={mobileMenuActive ? displayMobileMenu : void (0)} className="menu__cart"
-                                 to="/"><img src={require('../../assets/icons/cart-black.png')} alt=""/></NavLink>
+                                 to="/cart"><img src={require('../../assets/icons/cart-black.png')} alt=""/></NavLink>
                         <div className="menu__icon" onClick={displayMobileMenu}>
                             <span/>
                         </div>

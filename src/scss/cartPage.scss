@@ -1,4 +1,19 @@
 .cartPage {
+  &__title {
+    font-size: rem(30);
+    font-weight: 700;
+    margin: 23px 0;
+
+    @media screen and (max-width: $mb) {
+      margin: 20px 0;
+    }
+  }
+
+  &__content {
+    font-size: rem(18);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
 
   &__wrapper {
     display: flex;
@@ -26,7 +41,5 @@
     grid: 1/2;
   }
 
-  &__item-price {
-
-  }
+  &__item-price {}
 }
