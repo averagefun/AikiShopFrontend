@@ -7,6 +7,7 @@ import {useGetProductQuery} from "src/store/api/spring.api";
 import ProductImageSlider from "./ProductImageSlider";
 import {useParams} from "react-router-dom";
 import {motion} from "framer-motion";
+import {Helmet} from "react-helmet";
 
 function ProductPage() {
     const {id} = useParams();
@@ -23,6 +24,12 @@ function ProductPage() {
                          animate={{opacity: 1}}
                          exit={{opacity: 0}}
             >
+                <Helmet>
+                    <title>{product.name} - купить в интернет-магазине AikiShoes</title>
+                    <meta name="description" content="Качественные и надежные ботинки, выполненные из натуральной кожи с меховой стелькой,
+                    подошва из каучука."/>
+                    <link rel="canonical" href={`https://aikishoes.ru/product/${product.id}`}/>
+                </Helmet>
                 <div className="container">
                     <h1 className="productPage__title">{product.name}</h1>
 
@@ -56,7 +63,12 @@ function ProductPage() {
         );
     } else {
         return (
-            <main className="productPage" />
+            <main className="productPage">
+                <Helmet>
+                    <title>Товар не найден - AikoShoes</title>
+                    <meta name="description" content="Данный товар не найден. Вы можете выбрать другой товар в каталоге."/>
+                </Helmet>
+            </main>
         );
     }
 }

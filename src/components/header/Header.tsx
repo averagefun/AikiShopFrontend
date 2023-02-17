@@ -39,7 +39,7 @@ function Header() {
                     </div>
                     <nav className="header__menu menu">
 
-                        <div className="menu__body">
+                        <nav className="menu__body">
                             <ul className="menu__list">
                                 <li className="menu__item underline_anim">
                                     <NavLink
@@ -49,17 +49,17 @@ function Header() {
                                 <li className="menu__item underline_anim">
                                     <NavLink
                                         onClick={mobileMenuActive ? displayMobileMenu : void (0)}
-                                        to="/">Контакты
+                                        to="/contacts">Контакты
                                     </NavLink>
                                 </li>
                                 <li className="menu__item underline_anim">
                                     <NavLink
-                                        onClick={mobileMenuActive ? displayMobileMenu : void (0)} to="/">Статус
-                                        заказа
+                                        onClick={mobileMenuActive ? displayMobileMenu : void (0)}
+                                        to="/orderStatus">Статус заказа
                                     </NavLink>
                                 </li>
                             </ul>
-                        </div>
+                        </nav>
                         <NavLink onClick={mobileMenuActive ? displayMobileMenu : void (0)} className="menu__cart"
                                  to="/"><img src={require('../../assets/icons/cart-black.png')} alt=""/></NavLink>
                         <div className="menu__icon" onClick={displayMobileMenu}>

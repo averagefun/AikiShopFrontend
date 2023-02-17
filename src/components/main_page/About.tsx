@@ -17,7 +17,7 @@ function About(props: AboutProps) {
             <p className="about__paragraph">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                 Animi consequatur iusto magni omnis quam soluta suscipit tempore.
-                Aperiam aspernatur culpa ducimus ea illum necessitatibus officia placeat quia quod ullam.
+                Aperiam aspernatur culpa ducimus ea illum necessitatibus officia placeat quia quod.
             </p>
         </div>
     );
