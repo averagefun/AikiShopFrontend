@@ -19,7 +19,7 @@ function App() {
     return (
         <div className="wrapper">
             <Header/>
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<MainPage />}/>
                     <Route path="/product/:id" element={<ProductPage />}/>

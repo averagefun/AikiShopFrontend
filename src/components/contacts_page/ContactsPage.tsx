@@ -14,9 +14,21 @@ function ContactsPage() {
             <div className="container">
                 <h1 className="contactsPage__title">Контакты</h1>
                 <section className="contactsPage__body">
-                    <p className="contactsPage__contact">Telegram: <a href="https://t.me/worldbelike">@worldbelike</a></p>
-                    <p className="contactsPage__contact">Телефон: <a href="tel:+79934812060">+7 (993) 481 20 60</a></p>
-                    <p className="contactsPage__contact">Email: <a href="mailto:andrew.valid@ya.ru">andrew.valid@ya.ru</a></p>
+                    <p className="contactsPage__contact">Если у вас возникли любые вопросы по работе нашего магазина,
+                        произошли проблемы при доставке товара, есть претензии по качеству обуви, пожалуйста,
+                        обращайтесь к нам любым удобным Вам способом.</p>
+                    <p className="contactsPage__contact">Нажмите на нужный контакт, чтобы автоматически перейти в
+                        Telegram или Whatsapp.</p>
+                    <p className="contactsPage__contact"><b>Telegram:</b> <a
+                        href="https://t.me/aikishoes">@aikishoes</a>
+                    </p>
+                    <p className="contactsPage__contact"><b>WhatsApp:</b> <a
+                        href="https://wa.me/message/MKM57MH4TGRII1">Aiki Shoes</a>
+                    </p>
+                    <p className="contactsPage__contact"><b>Телефон:</b> <a
+                        href="tel:+79276986430">+7(927)-698-64-30</a></p>
+                    <p className="contactsPage__contact"><b>Email:</b> <a
+                        href="mailto:andrew.valid@ya.ru">andrew.valid@ya.ru</a></p>
                 </section>
             </div>
         </main>

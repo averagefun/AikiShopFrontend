@@ -31,7 +31,6 @@ function MainPage() {
                         <ProductCard key={i} className="main__product" product={product}/>
                     ))}
                 </div>
-                <h2 className="main__title">Производство</h2>
                 <About className="main__about"/>
             </div>
         </motion.main>
