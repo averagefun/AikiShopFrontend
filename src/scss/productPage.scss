@@ -4,12 +4,16 @@
   &__title {
     font-size: rem(30);
     font-weight: 700;
-    margin: 27px 0;
+    margin: 27px 0 20px;
+
+    @media screen and (max-width: $mb){
+      margin-bottom: 12px;
+    }
   }
 
   &__content {
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
     column-gap: 60px;
 
     @media screen and (max-width: $lp){
@@ -32,9 +36,7 @@
   &__info {}
 
   &__imageSlider {
-    width: 500px;
-    height: 80vh;
-    max-height: 500px;
+    width: 450px;
 
     @media screen and (max-width: $lp){
       width: 400px;
@@ -45,7 +47,7 @@
     }
 
     @media screen and (max-width: $mb){
-      width: 100%;
+      width: calc(100vw - 2 * rem(15));
     }
   }
 }
@@ -54,11 +56,11 @@
   .swiper-slide {
     background-size: cover;
     background-position: center;
+    border-radius: 10px;
 
     img {
       display: block;
       width: 100%;
-      height: 100%;
       object-fit: cover;
     }
   }
@@ -67,7 +69,9 @@
     height: 80%;
     width: 100%;
 
-    border-radius: 25px;
+    img {
+      border-radius: 15px;
+    }
 
     .swiper-slide {
       @media screen and (max-width: $mb){
@@ -82,7 +86,7 @@
     padding: 10px 0;
 
     .swiper-slide {
-      width: 25%;
+      //width: 25%;
       height: 100%;
       opacity: 0.4;
 
@@ -125,9 +129,27 @@
 
   &__price {
     align-self: flex-start;
-    border-radius: 20px;
-    padding: 7px 20px;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
     margin-bottom: 13px;
+
+    @media screen and (max-width: $mb){
+      margin-top: 12px;
+    }
+  }
+
+  &__real-price {
+    padding: 7px 20px;
+    border-radius: 20px;
+  }
+
+  &__old-price {
+    font-size: rem(18);
+
+    &::before {
+      background-color:$black;
+    }
   }
 
   &__header {
@@ -233,6 +255,9 @@
   }
 
   &__btn {
+    a {
+      color: $white;
+    }
   }
 }
 

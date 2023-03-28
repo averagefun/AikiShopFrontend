@@ -37,8 +37,9 @@ function ProductPage() {
                         <ProductImageSlider className="productPage__imageSlider" images={images}/>
 
                         <div className="productPage__info productInfo">
-                            <div className="productInfo__price black-price">
-                                <span>{product.price} ₽</span>
+                            <div className="productInfo__price ">
+                                <div className="productInfo__real-price black-price">{product.price} ₽</div>
+                                <div className="productInfo__old-price price-cross">{product.oldPrice} ₽</div>
                             </div>
 
                             <h2 className="productInfo__header">
@@ -47,7 +48,8 @@ function ProductPage() {
 
                             <ul className="productInfo__features">
                                 {[...features]
-                                    .sort(feature => feature.priority)
+                                    .sort((feature1, feature2) =>
+                                        feature1.priority - feature2.priority)
                                     .map((feature, i) => (
                                         <li key={i}>{feature.feature}</li>
                                     ))}
@@ -66,7 +68,8 @@ function ProductPage() {
             <main className="productPage">
                 <Helmet>
                     <title>Товар не найден - AikoShoes</title>
-                    <meta name="description" content="Данный товар не найден. Вы можете выбрать другой товар в каталоге."/>
+                    <meta name="description"
+                          content="Данный товар не найден. Вы можете выбрать другой товар в каталоге."/>
                 </Helmet>
             </main>
         );

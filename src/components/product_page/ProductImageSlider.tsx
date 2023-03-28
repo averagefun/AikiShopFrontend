@@ -27,7 +27,7 @@ function ProductImageSlider(props: ProductImageSliderProps) {
                 modules={[FreeMode, Navigation, Thumbs]}
                 className="imageSlider__swiper-main"
             >
-                {props.images.map((image, i) => (
+                {[...props.images].sort((image1, image2) => image1.priority - image2.priority).map((image, i) => (
                     <SwiperSlide key={i}>
                         <img src={image.imagePath} alt={image.alt}/>
                     </SwiperSlide>
@@ -36,15 +36,15 @@ function ProductImageSlider(props: ProductImageSliderProps) {
             <Swiper
                 onSwiper={setThumbsSwiper}
                 spaceBetween={10}
-                slidesPerView={4}
+                slidesPerView={6}
                 freeMode={true}
                 watchSlidesProgress={true}
                 modules={[FreeMode, Navigation, Thumbs]}
                 className="imageSlider__swiper-thumbs"
             >
-                {props.images.map((image, i) => (
+                {[...props.images].sort((image1, image2) => image1.priority - image2.priority).map((image, i) => (
                     <SwiperSlide key={i}>
-                        <img src={image.imagePath} alt="Изображение товара"/>
+                        <img src={image.imagePath} alt={image.alt}/>
                     </SwiperSlide>
                 ))}
             </Swiper>

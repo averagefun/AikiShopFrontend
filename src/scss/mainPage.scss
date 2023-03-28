@@ -28,6 +28,8 @@ $card-gap: 25px;
 
 .product {
   display: flex;
+  justify-content: space-between;
+
   @include flex-cards(0, 1, 3, $card-gap);
 
   @media screen and (max-width: $lp) {
@@ -73,6 +75,7 @@ $card-gap: 25px;
   }
 
   &__image {
+    padding-top: rem(15);
     position: absolute;
     top: 0;
     left: 0;
@@ -119,15 +122,24 @@ $card-gap: 25px;
     top: 0;
     z-index: 1;
     border-radius: 0 0 12px 0;
+    padding-right: 15px;
+  }
+
+  &__real-price {
+    text-align: center;
+  }
+
+  &__old-price {
+    font-size: rem(14);
   }
 }
 
 .featureSlider {
-  min-height: 350px;
-  height: 50vh;
+  border-radius: 29px;
 
   @media screen and (max-width: $mb) {
     height: calc(var(--vh, 1vh) * 100 - #{$header-height});
+    border-radius: 0;
   }
 
   &__slide {
@@ -151,7 +163,6 @@ $card-gap: 25px;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: bottom;
     }
   }
 }

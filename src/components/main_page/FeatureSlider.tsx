@@ -8,22 +8,72 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-const featureSlider: IFeatureSlide[] = [
+const featureSliderDesktop: IFeatureSlide[] = [
     {
-        alt: "Скидка на ботинки Aiki.",
-        imagePath: require('../../assets/features/f1.jpg')
+        alt: "Качественные ботинки Aiki из натуральной кожи со скидкой",
+        imagePath: require('../../assets/features/desktop/50.jpg')
     },
     {
-        alt: "Aiki Shoes гарантия качества.",
-        imagePath: require('../../assets/features/f2.jpg')
+        alt: "Надежные и стильные Aiki Shoes",
+        imagePath: require('../../assets/features/desktop/37.jpg')
+    },
+    {
+        alt: "Купить женские и мужские ботинки в интернет-магазине Aiki Shoes (Айки ботинки)",
+        imagePath: require('../../assets/features/desktop/40.jpg')
+    },
+    {
+        alt: "Огромные скидки при покупке ботинок Aiki в магазине Aiki Shoes",
+        imagePath: require('../../assets/features/desktop/44.jpg')
+    },
+    {
+        alt: "Только натуральная кожа - ботинки Aiki",
+        imagePath: require('../../assets/features/desktop/31.jpg')
+    },
+    {
+        alt: "Ручная работа с особым вниманием ко всем деталям",
+        imagePath: require('../../assets/features/desktop/35.jpg')
+    }
+]
+
+const featureSliderMobile: IFeatureSlide[] = [
+    {
+        alt: "Качественные ботинки Aiki из натуральной кожи со скидкой",
+        imagePath: require('../../assets/features/mobile/50.jpg')
+    },
+    {
+        alt: "Надежные и стильные Aiki Shoes",
+        imagePath: require('../../assets/features/mobile/37.jpg')
+    },
+    {
+        alt: "Купить женские и мужские ботинки в интернет-магазине Aiki Shoes (Айки ботинки)",
+        imagePath: require('../../assets/features/mobile/40.jpg')
+    },
+    {
+        alt: "Огромные скидки при покупке ботинок Aiki в магазине Aiki Shoes",
+        imagePath: require('../../assets/features/mobile/44.jpg')
+    },
+    {
+        alt: "Только натуральная кожа - ботинки Aiki",
+        imagePath: require('../../assets/features/mobile/31.jpg')
+    },
+    {
+        alt: "Ручная работа с особым вниманием ко всем деталям",
+        imagePath: require('../../assets/features/mobile/47.jpg')
+    },
+    {
+        alt: "Aiki Shoes - гарантия качества и комфорта",
+        imagePath: require('../../assets/features/mobile/35.jpg')
     }
 ]
 
 interface FeatureSliderProps {
     className: string;
+    isMobile: boolean;
 }
 
 function FeatureSlider(props: FeatureSliderProps) {
+    const featureSlider = props.isMobile ? featureSliderMobile : featureSliderDesktop;
+
     return (
         <Swiper
             spaceBetween={30}

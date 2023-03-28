@@ -62,7 +62,7 @@ function ProductCart(props: ProductCartProps) {
             </div>
             <div className="product-cart__bottom">
                 <button className="product-cart__btn black-button">
-                    Заказать на Ozon →
+                    <a href="https://www.avito.ru/sankt-peterburg/odezhda_obuv_aksessuary/zhenskie_botinki_aiki_black_iz_naturalnoy_kozhi_2815186918">Заказать на Авито →</a>
                 </button>
                 {/*{(!currItemCart || !currItemCart.sizes.find(size => size.size === sizeActive.size)) ? (*/}
                 {/*    <button className="product-cart__btn black-button"*/}

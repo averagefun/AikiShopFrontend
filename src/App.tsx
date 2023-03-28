@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
+import ScrollToTop from "./utils/ScrollToTop";
 
 import MainPage from "./components/main_page/MainPage";
 import ProductPage from "./components/product_page/ProductPage";
@@ -20,6 +21,7 @@ function App() {
         <div className="wrapper">
             <Header/>
             <AnimatePresence mode="wait">
+                <ScrollToTop />
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<MainPage />}/>
                     <Route path="/product/:id" element={<ProductPage />}/>

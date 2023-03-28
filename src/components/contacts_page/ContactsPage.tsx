@@ -25,10 +25,16 @@ function ContactsPage() {
                     <p className="contactsPage__contact"><b>WhatsApp:</b> <a
                         href="https://wa.me/message/MKM57MH4TGRII1">Aiki Shoes</a>
                     </p>
-                    <p className="contactsPage__contact"><b>Телефон:</b> <a
-                        href="tel:+79276986430">+7(927)-698-64-30</a></p>
                     <p className="contactsPage__contact"><b>Email:</b> <a
-                        href="mailto:andrew.valid@ya.ru">andrew.valid@ya.ru</a></p>
+                        href="mailto:aikishoes@yandex.ru">aikishoes@yandex.ru</a></p>
+                </section>
+
+                <h2 className="contactsPage__title">Реквизиты</h2>
+                <section className="contactsPage__body">
+                    <p className="contactsPage__contact">ИП Барабанщиков Андрей Дмитриевич</p>
+                    <p className="contactsPage__contact">ИНН: 637603261586</p>
+                    <p className="contactsPage__contact">ОГРНИП: 323631200046885</p>
+                    <p className="contactsPage__contact">Адрес: г. Санкт-Петербург, ул. Печатника Григорьева, 8</p>
                 </section>
             </div>
         </main>

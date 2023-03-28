@@ -4,10 +4,9 @@
     justify-content: center;
     align-items: center;
 
-    &__text {
-        text-align: center;
-
+    &__content {
         color: #fff;
         font-size: rem(20);
+        text-align: center;
     }
 }

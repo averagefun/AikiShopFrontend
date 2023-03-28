@@ -123,6 +123,21 @@ a {
     padding: 5px 20px;
 }
 
+.price-cross {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background-color: $white;
+        right: 0;
+        top: 50%;
+        transform: skewY(-4deg);
+    }
+}
+
 .underline_anim {
     $underline-height: em(1.8);
 
@@ -139,6 +154,16 @@ a {
         background-size: 100% $underline-height, auto;
         transition: background-size 0.2s ease-out;
     }
+}
+
+// remove the blue highlight of button
+input,
+textarea,
+button,
+select,
+li,
+a {
+    -webkit-tap-highlight-color: transparent;
 }
 
 // Swiper
