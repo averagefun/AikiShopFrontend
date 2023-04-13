@@ -8,6 +8,7 @@ import ProductImageSlider from "./ProductImageSlider";
 import {useParams} from "react-router-dom";
 import {motion} from "framer-motion";
 import {Helmet} from "react-helmet";
+import ProductSizeChooser from "src/components/product_page/ProductSizeChooser";
 
 function ProductPage() {
     const {id} = useParams();
@@ -32,8 +33,7 @@ function ProductPage() {
                 </Helmet>
                 <div className="container">
                     <h1 className="productPage__title">{product.name}</h1>
-
-                    <div className="productPage__content">
+                    <section className="productPage__content">
                         <ProductImageSlider className="productPage__imageSlider" images={images}/>
 
                         <div className="productPage__info productInfo">
@@ -59,7 +59,8 @@ function ProductPage() {
                                          productID={product.id}
                                          productSizes={sizes}/>
                         </div>
-                    </div>
+                    </section>
+                    <ProductSizeChooser className="productPage__sizeChooser" />
                 </div>
             </motion.main>
         );

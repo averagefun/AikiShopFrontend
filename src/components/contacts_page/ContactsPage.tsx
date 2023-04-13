@@ -19,11 +19,15 @@ function ContactsPage() {
                         обращайтесь к нам любым удобным Вам способом.</p>
                     <p className="contactsPage__contact">Нажмите на нужный контакт, чтобы автоматически перейти в
                         Telegram или Whatsapp.</p>
+
                     <p className="contactsPage__contact"><b>Telegram:</b> <a
                         href="https://t.me/aikishoes">@aikishoes</a>
                     </p>
                     <p className="contactsPage__contact"><b>WhatsApp:</b> <a
                         href="https://wa.me/message/MKM57MH4TGRII1">Aiki Shoes</a>
+                    </p>
+                    <p className="contactsPage__contact"><b>Вконтакте:</b> <a
+                        href="https://vk.com/aikishoes">aikishoes</a>
                     </p>
                     <p className="contactsPage__contact"><b>Email:</b> <a
                         href="mailto:aikishoes@yandex.ru">aikishoes@yandex.ru</a></p>

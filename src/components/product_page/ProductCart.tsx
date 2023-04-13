@@ -9,6 +9,104 @@ interface ProductCartProps {
     productSizes: IProductSize[];
 }
 
+interface ProductCartShop {
+    shopName: string;
+    shopUrl: string;
+}
+
+interface ProductCartShops {
+    size: string;
+    shops: ProductCartShop[];
+}
+
+const productCartShops: ProductCartShops[] = [
+    {
+        size: "36",
+        shops: [
+            {
+                shopName: "Авито",
+                shopUrl: "https://www.avito.ru/sankt-peterburg/odezhda_obuv_aksessuary/kozhanye_kraftovye_botinki_aiki_shoes_vesna_36_2815186918"
+            },
+            {
+                shopName: "Ozon (+10%)",
+                shopUrl: "https://www.ozon.ru/product/botinki-aiki-shoes-931054549"
+            },
+            {
+                shopName: "Яндекс Маркет (+10%)",
+                shopUrl: "https://market.yandex.ru/product--botinki-aiki-shoes/1831989261?sku=101988124844"
+            },
+        ]
+    },
+    {
+        size: "37",
+        shops: [
+            {
+                shopName: "Авито",
+                shopUrl: "https://www.avito.ru/sankt-peterburg/odezhda_obuv_aksessuary/kozhanye_kraftovye_botinki_aiki_shoes_vesna_37_2911076121"
+            },
+            {
+                shopName: "Ozon (+10%)",
+                shopUrl: "https://www.ozon.ru/product/botinki-aiki-shoes-931051424"
+            },
+            {
+                shopName: "Яндекс Маркет (+10%)",
+                shopUrl: "https://market.yandex.ru/product--botinki-aiki-shoes/1831989261?sku=101989129765"
+            },
+        ]
+    },
+    {
+        size: "38",
+        shops: [
+            {
+                shopName: "Авито",
+                shopUrl: "https://www.avito.ru/sankt-peterburg/odezhda_obuv_aksessuary/kozhanye_kraftovye_botinki_aiki_shoes_vesna_38_2911229470"
+            },
+            {
+                shopName: "Ozon (+10%)",
+                shopUrl: "https://www.ozon.ru/product/botinki-aiki-shoes-931054556"
+            },
+            {
+                shopName: "Яндекс Маркет (+10%)",
+                shopUrl: "https://market.yandex.ru/product--botinki-aiki-shoes/1831989261?sku=101989129766"
+            },
+        ]
+    },
+    {
+        size: "39",
+        shops: [
+            {
+                shopName: "Авито",
+                shopUrl: "https://www.avito.ru/sankt-peterburg/odezhda_obuv_aksessuary/kozhanye_kraftovye_botinki_aiki_shoes_vesna_39_2910856774"
+            },
+            {
+                shopName: "Ozon (+10%)",
+                shopUrl: "https://www.ozon.ru/product/botinki-aiki-shoes-931051386"
+            },
+            {
+                shopName: "Яндекс Маркет (+10%)",
+                shopUrl: "https://market.yandex.ru/product--botinki-aiki-shoes/1831989261?sku=101989129767"
+            },
+        ]
+    },
+    {
+        size: "40",
+        shops: [
+            {
+                shopName: "Авито",
+                shopUrl: "https://www.avito.ru/sankt-peterburg/odezhda_obuv_aksessuary/kozhanye_kraftovye_botinki_aiki_shoes_vesna_40_2911115441"
+            },
+            {
+                shopName: "Ozon (+10%)",
+                shopUrl: "https://www.ozon.ru/product/botinki-aiki-shoes-931051426"
+            },
+            {
+                shopName: "Яндекс Маркет (+10%)",
+                shopUrl: "https://market.yandex.ru/product--botinki-aiki-shoes/1831989261?sku=101988902700"
+            },
+        ]
+    }
+]
+
 function ProductCart(props: ProductCartProps) {
 
     let defaultSize: IProductSize | undefined = props.productSizes.find(size => size.size === "41")
@@ -61,9 +159,15 @@ function ProductCart(props: ProductCartProps) {
                 </ul>
             </div>
             <div className="product-cart__bottom">
-                <button className="product-cart__btn black-button">
-                    <a href="https://www.avito.ru/sankt-peterburg/odezhda_obuv_aksessuary/zhenskie_botinki_aiki_black_iz_naturalnoy_kozhi_2815186918">Заказать на Авито →</a>
-                </button>
+                {(productCartShops.find(size => size.size === sizeActive.size) as ProductCartShops).shops.map(shop => (
+                    (shop.shopUrl && (
+                        <a target="_blank" href={shop.shopUrl} rel="noreferrer">
+                            <button className="product-cart__btn black-button">
+                                {shop.shopName} →
+                            </button>
+                        </a>
+                    ))
+                ))}
                 {/*{(!currItemCart || !currItemCart.sizes.find(size => size.size === sizeActive.size)) ? (*/}
                 {/*    <button className="product-cart__btn black-button"*/}
                 {/*            onClick={() => addToCart({*/}
