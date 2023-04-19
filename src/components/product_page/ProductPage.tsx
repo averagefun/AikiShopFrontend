@@ -5,13 +5,15 @@ import ProductCart from "./ProductCart";
 
 import {useGetProductQuery} from "src/store/api/spring.api";
 import ProductImageSlider from "./ProductImageSlider";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {motion} from "framer-motion";
 import {Helmet} from "react-helmet";
 import ProductSizeChooser from "src/components/product_page/ProductSizeChooser";
 
 function ProductPage() {
     const {id} = useParams();
+    const [searchParams] = useSearchParams();
+    const startSize = searchParams.get("size") != null ? searchParams.get("size") as string : undefined;
     const {data: product} = useGetProductQuery(parseInt(id as string));
 
     if (product) {
@@ -57,6 +59,7 @@ function ProductPage() {
 
                             <ProductCart className="productInfo__product-cart"
                                          productID={product.id}
+                                         startSize={startSize}
                                          productSizes={sizes}/>
                         </div>
                     </section>

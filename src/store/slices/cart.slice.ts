@@ -5,8 +5,11 @@ interface CartState {
     cart: ICartItem[];
 }
 
+const cartProducts = localStorage.getItem("cartProducts") != null ?
+    JSON.parse(localStorage.getItem("cartProducts") as string) as ICartItem[] : []
+
 const initialState: CartState = {
-    cart: []
+    cart: cartProducts
 };
 
 export const cartSlice = createSlice({
@@ -29,11 +32,13 @@ export const cartSlice = createSlice({
                     }]
                 })
             }
+            localStorage.setItem("cartProducts", JSON.stringify(state.cart));
         },
         incrementSize: (state, action: PayloadAction<ICartItemChangeEvent>) => {
             const foundItem: ICartItem = state.cart.find(item => item.productId === action.payload.id) as ICartItem;
             const foundSize: IProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as IProductSize;
             foundSize.count++;
+            localStorage.setItem("cartProducts", JSON.stringify(state.cart));
         },
         decrementSize: (state, action: PayloadAction<ICartItemChangeEvent>) => {
             const foundItem: ICartItem = state.cart.find(item => item.productId === action.payload.id) as ICartItem;
@@ -47,7 +52,19 @@ export const cartSlice = createSlice({
                     state.cart = state.cart.filter(item => item.productId !== action.payload.id);
                 }
             }
-        }
+            localStorage.setItem("cartProducts", JSON.stringify(state.cart));
+        },
+        deleteSize: (state, action: PayloadAction<ICartItemChangeEvent>) => {
+            const foundItem: ICartItem = state.cart.find(item => item.productId === action.payload.id) as ICartItem;
+            const foundSize: IProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as IProductSize;
+            foundSize.count = 0;
+
+            foundItem.sizes = foundItem.sizes.filter(size => size.size !== action.payload.size);
+            if (foundItem.sizes.length === 0) {
+                state.cart = state.cart.filter(item => item.productId !== action.payload.id);
+            }
+            localStorage.setItem("cartProducts", JSON.stringify(state.cart));
+        },
     }
 })
 
