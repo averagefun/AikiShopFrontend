@@ -4,7 +4,8 @@ export interface IFeatureSlide {
 }
 
 export interface IProductSize {
-    id?: number;
+    id: number;
+    article: string;
     size: string;
     count: number;
 }
@@ -38,6 +39,29 @@ export interface ICartItem {
 }
 
 export interface ICartItemChangeEvent {
-    id: number;
+    productId: number;
+    sizeId: number;
+    article: string;
     size: string;
+}
+
+export interface IOrder {
+    id: number;
+    amount: number;
+    creationTime: Date;
+    orderStatus: string;
+    selectedSizes: IProductSize[];
+    // deliveryCode: string;
+    // email: string;
+}
+
+export interface IOrderRest {
+    amount: number;
+    selectedSizes: number[];
+    email: string;
+}
+
+export interface IOrderRegisterResponse {
+    orderId: string,
+    formUrl: string
 }

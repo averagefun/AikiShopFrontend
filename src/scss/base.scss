@@ -7,6 +7,7 @@
 // colors
 $black: #111;
 $gray: #686868;
+$gray-trans: #68686888;
 $white: #fff;
 $black-trans: #111e;
 
@@ -213,6 +214,17 @@ a {
             display: none;
         }
     }
+}
+
+// Remove arrows from numeric input fields
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 // Buttons

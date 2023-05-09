@@ -12,7 +12,6 @@ interface ProductCartProps {
 }
 
 function ProductCart(props: ProductCartProps) {
-
     let defaultSize: IProductSize | undefined = props.productSizes.find(size => size.size === (props.startSize ? props.startSize : "38"))
     if (!defaultSize) {
         defaultSize = props.productSizes[0];
@@ -26,7 +25,9 @@ function ProductCart(props: ProductCartProps) {
         const currItemCartSize = currItemCart.sizes.find(size => size.size === sizeActive.size);
         if (currItemCartSize && currItemCartSize.count >= 1) {
             decrementSize({
-                id: props.productID,
+                productId: props.productID,
+                article: currItemCartSize.article,
+                sizeId: currItemCartSize.id,
                 size: currItemCartSize.size
             });
         }
@@ -36,7 +37,9 @@ function ProductCart(props: ProductCartProps) {
         const currItemCartSize = currItemCart.sizes.find(size => size.size === sizeActive.size);
         if (currItemCartSize && currItemCartSize.count < Math.min(sizeActive.count, 5)) {
             incrementSize({
-                id: props.productID,
+                productId: props.productID,
+                article: currItemCartSize.article,
+                sizeId: currItemCartSize.id,
                 size: currItemCartSize.size
             });
         }
@@ -66,7 +69,9 @@ function ProductCart(props: ProductCartProps) {
                 {(!currItemCart || !currItemCart.sizes.find(size => size.size === sizeActive.size)) ? (
                     <button className="product-cart__btn black-button"
                             onClick={() => addToCart({
-                                id: props.productID,
+                                productId: props.productID,
+                                article: sizeActive.article,
+                                sizeId: sizeActive.id,
                                 size: sizeActive.size
                             })}
                     >Добавить в корзину

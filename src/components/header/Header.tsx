@@ -55,7 +55,7 @@ function Header() {
                                 <li className="menu__item underline_anim">
                                     <NavLink
                                         onClick={mobileMenuActive ? displayMobileMenu : void (0)}
-                                        to="/orderStatus">Статус заказа
+                                        to="/orderStatus">Заказы
                                     </NavLink>
                                 </li>
                             </ul>

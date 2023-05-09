@@ -9,6 +9,7 @@ import {useParams, useSearchParams} from "react-router-dom";
 import {motion} from "framer-motion";
 import {Helmet} from "react-helmet";
 import ProductSizeChooser from "src/components/product_page/ProductSizeChooser";
+import {displayPrice} from "src/utils/utilFunctions";
 
 function ProductPage() {
     const {id} = useParams();
@@ -40,8 +41,8 @@ function ProductPage() {
 
                         <div className="productPage__info productInfo">
                             <div className="productInfo__price ">
-                                <div className="productInfo__real-price black-price">{product.price} ₽</div>
-                                <div className="productInfo__old-price price-cross">{product.oldPrice} ₽</div>
+                                <div className="productInfo__real-price black-price">{displayPrice(product.price)} ₽</div>
+                                <div className="productInfo__old-price price-cross">{product.oldPrice ? displayPrice(product.oldPrice) + " ₽": ""}</div>
                             </div>
 
                             <h2 className="productInfo__header">

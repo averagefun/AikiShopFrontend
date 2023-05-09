@@ -1,0 +1,141 @@
+.ordersHistoryPage {
+  &__title {
+    font-size: rem(30);
+    font-weight: 700;
+    margin: 23px 0;
+
+    @media screen and (max-width: $mb) {
+      margin: 20px 0;
+    }
+  }
+
+  &__content {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    padding-bottom: 15px;
+
+    @media screen and (max-width: 920px) {
+      flex-direction: column;
+    }
+  }
+
+  &__orders {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: rem(12);
+  }
+
+  &__order-search {
+    max-width: 350px;
+    align-self: flex-start;
+
+    @media screen and (max-width: $lp) {
+      max-width: 350px;
+    }
+    @media screen and (max-width: 890px) {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+}
+
+.order {
+  display: grid;
+  grid-template-rows: 25px min-content 1fr;
+  grid-template-columns: 1fr 140px;
+  grid-row-gap: 10px;
+
+  @media screen and (max-width: $tb) {
+    padding: 15px;
+    grid-template-columns: 1fr 30px;
+    grid-template-rows: 25px min-content 1fr 20px;
+  }
+
+  padding: 20px;
+  font-size: rem(18);
+  box-shadow: 0 0 2px 0 #aaa;
+  border-radius: 1em;
+
+  &__failed {
+    color: $gray-trans;
+
+    .order__number {
+      text-decoration: line-through;
+    }
+  }
+
+  &__number {
+    grid-area: 1 / 1 / 2 / 2;
+    font-weight: 500;
+
+    @media screen and (max-width: $tb) {
+      grid-area: 1 / 1 / 2 / 3;
+    }
+  }
+
+  &__status {
+    grid-area: 2 / 1 / 3 / 2;
+    @media screen and (max-width: $tb) {
+      grid-area: 2 / 1 / 3 / 3;
+    }
+  }
+
+  &__sizes {
+    grid-area: 3 / 1 / 4 / 2;
+    @media screen and (max-width: $tb) {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+  }
+
+  &__size {
+    line-height: 1.2;
+  }
+
+  &__amount {
+    grid-area: 1 / 2 / 2 / 3;
+    @media screen and (max-width: $tb) {
+      grid-area: 4 / 1 / 5 / 2;
+    }
+  }
+
+  &__hide {
+    grid-area: 3 / 2 / 4 / 3;
+    justify-self: end;
+    font-size: rem(18);
+    color: $gray-trans;
+
+    @media screen and (max-width: $tb) {
+      grid-area: 4 / 2 / 5 / 3;
+    }
+  }
+}
+
+.order-search {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  box-shadow: 0 0 2px 0 #aaa;
+  border-radius: 1em;
+
+  &__title {
+    min-width: 300px;
+    font-size: rem(18);
+    text-align: center;
+    font-weight: 500;
+  }
+
+  &__input {
+    display: block;
+    font-size: rem(18);
+    box-shadow: 0 0 2px 0 #aaa;
+    padding: 5px 10px;
+    border-radius: 1em;
+  }
+
+  &__button {
+    padding: 12px 20px;
+  }
+}

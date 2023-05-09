@@ -1,6 +1,7 @@
 import React from 'react';
 import {IProduct, IProductImage} from "src/types/interfaces";
 import {Link} from "react-router-dom";
+import {displayPrice} from "src/utils/utilFunctions";
 
 interface ProductCardProps {
     className: string;
@@ -22,9 +23,9 @@ function ProductCard(props: ProductCardProps) {
                 <img className="product__image" src={mainImage.imagePath} alt={mainImage.alt}/>
                 <div className="product__blackout"/>
                 <div className="product__price black-price">
-                    <div className="product__real-price">{props.product.price} ₽</div>
-                    {discount !== 0 && (
-                        <div className="product__old-price">{discount}% <span className="price-cross">{props.product.oldPrice} ₽</span></div>
+                    <div className="product__real-price">{displayPrice(props.product.price)} ₽</div>
+                    {discount !== 0 && props.product.oldPrice && (
+                        <div className="product__old-price">{discount}% <span className="price-cross">{displayPrice(props.product.oldPrice)} ₽</span></div>
                     )}
                 </div>
             </div>

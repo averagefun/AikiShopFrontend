@@ -9,7 +9,7 @@ import ScrollToTop from "./utils/ScrollToTop";
 import MainPage from "./components/main_page/MainPage";
 import ProductPage from "./components/product_page/ProductPage";
 import ContactsPage from "src/components/contacts_page/ContactsPage";
-import OrderStatusPage from "src/components/order_status_page/OrderStatusPage";
+import OrdersHistoryPage from "src/components/orders_history_page/OrdersHistoryPage";
 import CartPage from "src/components/cart_page/CartPage";
 
 import "./scss/style.scss"
@@ -23,10 +23,9 @@ function App() {
             <AnimatePresence mode="wait">
                 <ScrollToTop />
                 <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<MainPage />}/>
                     <Route path="/product/:id" element={<ProductPage />}/>
                     <Route path="/contacts" element={<ContactsPage />}/>
-                    <Route path="/orderStatus" element={<OrderStatusPage />}/>
+                    <Route path="/orderStatus" element={<OrdersHistoryPage />}/>
                     <Route path="/cart" element={<CartPage />}/>
                     <Route path="*" element={<MainPage />}/>
                 </Routes>

@@ -1,28 +1,42 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import {useAppSelector} from "src/hooks/redux";
-import {useGetProductsQuery} from "src/store/api/spring.api";
+import {useCreateOrderMutation, useGetProductsQuery} from "src/store/api/spring.api";
 import {motion} from "framer-motion";
 
-import {ICartItem, IProduct, IProductSize} from "src/types/interfaces";
+import {ICartItem, IProduct, IProductSize, IOrderRegisterResponse, IOrderRest} from "src/types/interfaces";
 import {Helmet} from "react-helmet";
 import {useActions} from "src/hooks/actions";
+import {displayPrice} from "src/utils/utilFunctions";
 
 function CartPage() {
     const cartItems: ICartItem[] = useAppSelector(state => state.cartStore.cart);
+    const [createOrder] = useCreateOrderMutation();
     const {data: products} = useGetProductsQuery(null);
     const {incrementSize, decrementSize, deleteSize} = useActions();
-    const amount = (): number => {
-        let products_amount = 0;
+
+    const [payEmail, setPayEmail] = useState<string>();
+
+    const calculateCart = (): IOrderRest => {
+        const sizesList: number[] = [];
+        let productsAmount = 0;
         if (products) {
             cartItems.forEach(item => {
                 const product = products.find(product => item.productId === product.id) as IProduct;
                 item.sizes.forEach(size => {
-                    products_amount += size.count * product.price;
+                    productsAmount += size.count * product.price;
+                    sizesList.push(...Array(size.count).fill(size.id));
                 })
             });
         }
-        return products_amount;
+        return {amount: productsAmount, selectedSizes: sizesList, email: payEmail ? payEmail : ""};
+    }
+
+    const amountCart = calculateCart().amount;
+
+    const checkoutHandler = async () => {
+        const response: IOrderRegisterResponse = await createOrder(calculateCart()).unwrap();
+        window.location.href = response.formUrl;
     }
 
     return (
@@ -39,7 +53,7 @@ function CartPage() {
             </Helmet>
 
             <div className="container">
-                <h1 className="orderStatusPage__title">Корзина</h1>
+                <h1 className="cartPage__title">Корзина</h1>
                 {cartItems.length > 0 ? (
                     <div className="cartPage__wrapper">
                         <section className="cartPage__items">
@@ -52,7 +66,9 @@ function CartPage() {
                                             const minusHandler = (): void => {
                                                 if (size && size.count >= 1) {
                                                     decrementSize({
-                                                        id: product.id,
+                                                        productId: product.id,
+                                                        article: size.article,
+                                                        sizeId: size.id,
                                                         size: size.size
                                                     });
                                                 }
@@ -60,7 +76,9 @@ function CartPage() {
                                             const plusHandler = (): void => {
                                                 if (size && productSize && size.count < Math.min(productSize.count, 5)) {
                                                     incrementSize({
-                                                        id: product.id,
+                                                        productId: product.id,
+                                                        article: size.article,
+                                                        sizeId: size.id,
                                                         size: size.size
                                                     });
                                                 }
@@ -69,7 +87,9 @@ function CartPage() {
                                             const deleteItemHandler = (): void => {
                                                 if (size && size.count >= 1) {
                                                     deleteSize({
-                                                        id: product.id,
+                                                        productId: product.id,
+                                                        article: size.article,
+                                                        sizeId: size.id,
                                                         size: size.size
                                                     });
                                                 }
@@ -89,7 +109,7 @@ function CartPage() {
                                                         </Link></div>
                                                         <div className="cartPage__item-size">Размер: {size.size}</div>
                                                         <div
-                                                            className="cartPage__item-price">Итого: {size.count * product.price} ₽
+                                                            className="cartPage__item-price">Итого: {displayPrice(size.count * product.price)} ₽
                                                         </div>
                                                         <div className="cartPage__item-counter counter">
                                                             <button className="counter__button" onClick={minusHandler}>
@@ -124,18 +144,26 @@ function CartPage() {
                                 }
                             )}
                         </section>
-                        <section className="cartPage__pay">
-                            <h2 className="cartPage__pay-title">Оформление заказа</h2>
-                            <div className="cartPage__pay-amount">Общая сумма: {amount()} ₽</div>
-                            <div className="cartPage__pay-delivery">
-                                <p>Доставка по территории России осуществляется компанией СДЭК. Стоимость доставки зависит от расположения ближайшего к Вам пункта выдачи СДЭК
-                                и рассчитывается согласно тарифам транспортной компании. Позже здесь появится возможность выбрать на карте пункт выдачи, после чего автоматически
-                                рассчитается стоимость доставки.</p>
+                        <section className="cartPage__pay pay">
+                            <h2 className="pay__title">Оформление заказа</h2>
+                            <div className="pay__amount">Общая сумма: {displayPrice(amountCart)} ₽</div>
+                            <div className="pay__delivery">
+                                <p>Доставка по территории России осуществляется компанией СДЭК. Стоимость доставки
+                                    зависит от расположения ближайшего к Вам пункта выдачи СДЭК
+                                    и рассчитывается согласно тарифам транспортной компании. Позже здесь появится
+                                    возможность выбрать на карте пункт выдачи, после чего автоматически
+                                    рассчитается стоимость доставки.</p>
                             </div>
+                            <input type="email" onChange={(event) => setPayEmail(event.target.value)}
+                                   placeholder="Email" className="order-search__input"/>
+                            <button className="pay__button black-button"
+                                    onClick={checkoutHandler}>
+                                Оформить заказ
+                            </button>
                         </section>
                     </div>
                 ) : (
-                    <p className="orderStatusPage__content">Нет выбранных товаров.</p>
+                    <p className="cartPage__content">Нет выбранных товаров.</p>
                 )}
             </div>
         </motion.main>
