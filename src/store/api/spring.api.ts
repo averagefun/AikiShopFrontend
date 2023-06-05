@@ -27,9 +27,9 @@ export const springApi = createApi({
                 body
             })
          }),
-        getOrderStatus: build.query<IOrder, number>({
-            query: (id: number) => ({
-                url: `/orders/${id}`
+        getOrderStatus: build.query<IOrder, {id: number, email: string}>({
+            query: ({id, email}) => ({
+                url: `/orders/${id}?email=${email}`
             }),
             transformResponse: (response: IOrder): IOrder => {
                 response.creationTime = new Date(response.creationTime);

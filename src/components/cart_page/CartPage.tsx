@@ -1,4 +1,7 @@
-import React, {useState} from 'react';
+// noinspection JSUnresolvedLibraryURL, JSUnusedGlobalSymbols, HtmlUnknownTarget
+
+import React, {AriaAttributes, DOMAttributes, useState} from 'react';
+
 import {Link} from "react-router-dom";
 import {useAppSelector} from "src/hooks/redux";
 import {useCreateOrderMutation, useGetProductsQuery} from "src/store/api/spring.api";
@@ -8,6 +11,12 @@ import {ICartItem, IProduct, IProductSize, IOrderRegisterResponse, IOrderRest} f
 import {Helmet} from "react-helmet";
 import {useActions} from "src/hooks/actions";
 import {displayPrice} from "src/utils/utilFunctions";
+import InputMask from 'react-input-mask';
+
+interface fieldState {
+    value: string;
+    valid: boolean;
+}
 
 function CartPage() {
     const cartItems: ICartItem[] = useAppSelector(state => state.cartStore.cart);
@@ -15,7 +24,10 @@ function CartPage() {
     const {data: products} = useGetProductsQuery(null);
     const {incrementSize, decrementSize, deleteSize} = useActions();
 
-    const [payEmail, setPayEmail] = useState<string>();
+    const [payFullName, setPayFullName] = useState<fieldState>({value: "", valid: true});
+    const [payPhone, setPayPhone] = useState<fieldState>({value: "", valid: true});
+    const [payEmail, setPayEmail] = useState<fieldState>({value: "", valid: true});
+    const [payPVZ, setPayPVZ] = useState<fieldState>({value: "", valid: true});
 
     const calculateCart = (): IOrderRest => {
         const sizesList: number[] = [];
@@ -29,14 +41,37 @@ function CartPage() {
                 })
             });
         }
-        return {amount: productsAmount, selectedSizes: sizesList, email: payEmail ? payEmail : ""};
+        return {
+            amount: productsAmount, selectedSizes: sizesList, email: payEmail.value,
+            phone: payPhone.value.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', ''),
+            deliveryCode: payPVZ.value
+        };
     }
 
     const amountCart = calculateCart().amount;
 
+    const validateForm = (): boolean => {
+        const fullNameValid = payFullName.value.length > 0;
+        setPayFullName({value: payFullName.value, valid: fullNameValid});
+
+        const phoneValid = payPhone.value.length > 0 && !payPhone.value.includes("_");
+        setPayPhone({value: payPhone.value, valid: phoneValid});
+
+        const emailValid = payEmail.value.length > 0 && /^(.+)@(.+)$/.test(payEmail.value);
+        setPayEmail({value: payEmail.value, valid: emailValid});
+
+        const pvzId = (document.querySelector(".pay__pvz #pvz-id") as HTMLInputElement).value;
+        const pvzValid = pvzId.length > 0;
+        setPayPVZ({value: pvzId, valid: pvzValid});
+
+        return fullNameValid && phoneValid && emailValid && pvzValid;
+    }
+
     const checkoutHandler = async () => {
-        const response: IOrderRegisterResponse = await createOrder(calculateCart()).unwrap();
-        window.location.href = response.formUrl;
+        if (validateForm()) {
+            const response: IOrderRegisterResponse = await createOrder(calculateCart()).unwrap();
+            window.location.href = response.formUrl;
+        }
     }
 
     return (
@@ -50,8 +85,8 @@ function CartPage() {
                 <meta name="description"
                       content="Корзина: все ваши выбранные товары готовы к оформлению."/>
                 <link rel="canonical" href="https://aikishoes.ru/cart"/>
+                <script type="text/javascript" src="https://points.boxberry.de/js/boxberry.js"/>
             </Helmet>
-
             <div className="container">
                 <h1 className="cartPage__title">Корзина</h1>
                 {cartItems.length > 0 ? (
@@ -146,16 +181,41 @@ function CartPage() {
                         </section>
                         <section className="cartPage__pay pay">
                             <h2 className="pay__title">Оформление заказа</h2>
-                            <div className="pay__amount">Общая сумма: {displayPrice(amountCart)} ₽</div>
-                            <div className="pay__delivery">
-                                <p>Доставка по территории России осуществляется компанией СДЭК. Стоимость доставки
-                                    зависит от расположения ближайшего к Вам пункта выдачи СДЭК
-                                    и рассчитывается согласно тарифам транспортной компании. Позже здесь появится
-                                    возможность выбрать на карте пункт выдачи, после чего автоматически
-                                    рассчитается стоимость доставки.</p>
+
+                            <input type="text" onChange={(event) => setPayFullName({
+                                value: event.target.value.trim(),
+                                valid: payFullName.valid
+                            })}
+                                   placeholder="ФИО (получатель товара)"
+                                   className={`pay__input ${payFullName.valid ? "" : "validateFailed"}`}/>
+                            <InputMask
+                                mask="(+7) 999 999 99 99"
+                                onChange={(event) => setPayPhone({
+                                    value: event.target.value.trim(),
+                                    valid: payPhone.valid
+                                })}
+                                className={`pay__input ${payPhone.valid ? "" : "validateFailed"}`}
+                                placeholder="Телефон"
+                            />
+                            <input type="email"
+                                   onChange={(event) => setPayEmail({
+                                       value: event.target.value.trim(),
+                                       valid: payEmail.valid
+                                   })}
+                                   placeholder="Email"
+                                   className={`pay__input ${payEmail.valid ? "" : "validateFailed"}`}/>
+
+                            <div className="pay__pvz" onClick={() =>
+                                eval("boxberry.open((result) => { document.querySelector('.pay__pvz #pvz-address').value = result.address;" +
+                                    " document.querySelector('.pay__pvz #pvz-id').value = result.id;})")}>
+                                <input id="pvz-address" type="text" disabled={true}
+                                       placeholder="Выбрать пункт выдачи"
+                                       className={`pay__input ${payPVZ.valid ? "" : "validateFailed"}`
+                                       }
+                                />
+                                <input id="pvz-id" type="text" hidden={true}/>
                             </div>
-                            <input type="email" onChange={(event) => setPayEmail(event.target.value)}
-                                   placeholder="Email" className="order-search__input"/>
+
                             <button className="pay__button black-button"
                                     onClick={checkoutHandler}>
                                 Оформить заказ

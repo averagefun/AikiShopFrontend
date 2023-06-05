@@ -59,6 +59,8 @@ export interface IOrderRest {
     amount: number;
     selectedSizes: number[];
     email: string;
+    phone: string;
+    deliveryCode: string;
 }
 
 export interface IOrderRegisterResponse {

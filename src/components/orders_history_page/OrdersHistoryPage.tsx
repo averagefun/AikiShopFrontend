@@ -23,12 +23,13 @@ const getReadableOrderStatuses = (orderStatus: string): string => {
 
 function OrdersHistoryPage() {
     const [searchParams] = useSearchParams();
-    const newOrderId = searchParams.get("orderId") != null ? parseInt(searchParams.get("orderId") as string) : 0;
+    const newOrderId = searchParams.get("orderId") !== null ? parseInt(searchParams.get("orderId") as string) : 0;
+    const email = searchParams.get("email") !== null ? searchParams.get("email") as string : "";
     const ordersHistory: IOrder[] = useAppSelector(state => state.ordersHistoryStore.ordersHistory);
     const isOrders = ordersHistory && ordersHistory.length > 0;
     const {data: products} = useGetProductsQuery(null);
 
-    const {data: newOrder} = useGetOrderStatusQuery(newOrderId, {skip: newOrderId === 0});
+    const {data: newOrder} = useGetOrderStatusQuery({id: newOrderId, email: email}, {skip: newOrderId === 0});
     const {deleteCart, addOrder, removeOrder} = useActions();
 
     if (newOrder && !ordersHistory.find(order => order.id === newOrderId)) {
@@ -61,7 +62,7 @@ function OrdersHistoryPage() {
                             {[...ordersHistory]
                                 .sort((order1, order2) => order2.id - order1.id)
                                 .map(order => {
-                                    const isFailed = order.orderStatus != "successfullyPaid";
+                                    const isFailed = order.orderStatus !== "successfullyPaid";
                                     return (
                                         <div key={order.id}
                                              className={`ordersHistoryPage__order order ${isFailed ? "order__failed" : ""}`}>
