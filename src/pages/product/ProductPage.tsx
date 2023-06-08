@@ -8,7 +8,7 @@ import ProductImageSlider from "./ProductImageSlider";
 import {useParams, useSearchParams} from "react-router-dom";
 import {motion} from "framer-motion";
 import {Helmet} from "react-helmet";
-import ProductSizeChooser from "src/components/product_page/ProductSizeChooser";
+import ProductSizeChooser from "./ProductSizeChooser";
 import {displayPrice} from "src/utils/utilFunctions";
 
 function ProductPage() {

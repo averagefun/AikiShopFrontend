@@ -2,15 +2,15 @@ import React from 'react';
 import {Routes, Route, useLocation} from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
+import Header from "./templates/header/Header";
+import Footer from "./templates/footer/Footer";
 import ScrollToTop from "./utils/ScrollToTop";
 
-import MainPage from "./components/main_page/MainPage";
-import ProductPage from "./components/product_page/ProductPage";
-import ContactsPage from "src/components/contacts_page/ContactsPage";
-import OrdersHistoryPage from "src/components/orders_history_page/OrdersHistoryPage";
-import CartPage from "src/components/cart_page/CartPage";
+import MainPage from "./pages/main/MainPage"
+import ProductPage from "./pages/product/ProductPage";
+import ContactsPage from "./pages/contacts/ContactsPage";
+import OrdersHistoryPage from "./pages/orders_history/OrdersHistoryPage";
+import CartPage from "./pages/cart/CartPage";
 
 import "./scss/style.scss"
 

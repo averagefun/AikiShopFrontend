@@ -47,20 +47,40 @@ export interface ICartItemChangeEvent {
 
 export interface IOrder {
     id: number;
-    amount: number;
     creationTime: Date;
-    orderStatus: string;
+    amount: number;
+    orderStatus: OrderStatus;
+    phone: string;
     selectedSizes: IProductSize[];
-    // deliveryCode: string;
-    // email: string;
 }
 
-export interface IOrderRest {
+export interface IOrderRequestDTO {
     amount: number;
-    selectedSizes: number[];
-    email: string;
     phone: string;
     deliveryCode: string;
+    selectedSizes: number[];
+}
+
+export enum OrderStatus {
+    WAITING_FOR_PAYMENT, CANCELED, SUCCESSFULLY_PAID, PAYMENT_ERROR, PAYMENT_RETURNED,
+    DELIVERING, DELIVERED
+}
+
+// WAITING_FOR_PAYMENT("Ожидание оплаты"),
+//     CANCELED("Отменен"),
+//     SUCCESSFULLY_PAID("Успешно оплачен"),
+//     PAYMENT_ERROR("Ошибка при оплате"),
+//     PAYMENT_RETURNED("Проведена операция возврата"),
+//     DELIVERING("Доставляется"),
+//     DELIVERED("Доставлен");
+
+export interface IOrderResponseDTO {
+    id: number;
+    creationTime: Date;
+    amount: number;
+    orderStatus: OrderStatus;
+    phone: string;
+    selectedSizes: number[];
 }
 
 export interface IOrderRegisterResponse {

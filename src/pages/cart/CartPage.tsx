@@ -1,13 +1,13 @@
 // noinspection JSUnresolvedLibraryURL, JSUnusedGlobalSymbols, HtmlUnknownTarget
 
-import React, {AriaAttributes, DOMAttributes, useState} from 'react';
+import React, {useState} from 'react';
 
 import {Link} from "react-router-dom";
 import {useAppSelector} from "src/hooks/redux";
 import {useCreateOrderMutation, useGetProductsQuery} from "src/store/api/spring.api";
 import {motion} from "framer-motion";
 
-import {ICartItem, IProduct, IProductSize, IOrderRegisterResponse, IOrderRest} from "src/types/interfaces";
+import {ICartItem, IProduct, IProductSize, IOrderRegisterResponse, IOrderRequestDTO} from "src/types/interfaces";
 import {Helmet} from "react-helmet";
 import {useActions} from "src/hooks/actions";
 import {displayPrice} from "src/utils/utilFunctions";
@@ -24,12 +24,14 @@ function CartPage() {
     const {data: products} = useGetProductsQuery(null);
     const {incrementSize, decrementSize, deleteSize} = useActions();
 
-    const [payFullName, setPayFullName] = useState<fieldState>({value: "", valid: true});
-    const [payPhone, setPayPhone] = useState<fieldState>({value: "", valid: true});
-    const [payEmail, setPayEmail] = useState<fieldState>({value: "", valid: true});
-    const [payPVZ, setPayPVZ] = useState<fieldState>({value: "", valid: true});
+    const [fullName, setFullName] = useState<fieldState>({value: "", valid: true});
+    const [phone, setPhone] = useState<fieldState>({value: "", valid: true});
+    const [email, setEmail] = useState<fieldState>({value: "", valid: true});
+    const [pvz, setPvz] = useState<
+        {id: string, address: string, valid: boolean}>(
+        {id: "", address: "", valid: true});
 
-    const calculateCart = (): IOrderRest => {
+    const calculateCart = (): IOrderRequestDTO => {
         const sizesList: number[] = [];
         let productsAmount = 0;
         if (products) {
@@ -42,27 +44,25 @@ function CartPage() {
             });
         }
         return {
-            amount: productsAmount, selectedSizes: sizesList, email: payEmail.value,
-            phone: payPhone.value.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', ''),
-            deliveryCode: payPVZ.value
+            amount: productsAmount,
+            phone: phone.value.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', ''),
+            deliveryCode: pvz.id, selectedSizes: sizesList
         };
     }
 
-    const amountCart = calculateCart().amount;
-
     const validateForm = (): boolean => {
-        const fullNameValid = payFullName.value.length > 0;
-        setPayFullName({value: payFullName.value, valid: fullNameValid});
+        const fullNameValid = fullName.value.length > 0;
+        setFullName({...fullName, ...{valid: fullNameValid}});
 
-        const phoneValid = payPhone.value.length > 0 && !payPhone.value.includes("_");
-        setPayPhone({value: payPhone.value, valid: phoneValid});
+        const phoneValid = phone.value.length > 0 && !phone.value.includes("_");
+        setPhone({...phone, ...{valid: phoneValid}});
 
-        const emailValid = payEmail.value.length > 0 && /^(.+)@(.+)$/.test(payEmail.value);
-        setPayEmail({value: payEmail.value, valid: emailValid});
+        const emailValid = email.value.length > 0 && /^(.+)@(.+)$/.test(email.value);
+        setEmail({...email, ...{valid: emailValid}});
 
-        const pvzId = (document.querySelector(".pay__pvz #pvz-id") as HTMLInputElement).value;
-        const pvzValid = pvzId.length > 0;
-        setPayPVZ({value: pvzId, valid: pvzValid});
+        // const pvzId = (document.querySelector(".pay__pvz #pvz-id") as HTMLInputElement).value;
+        const pvzValid = pvz.id.length > 0 && pvz.address.length > 0;
+        setPvz({...pvz, ...{valid: pvzValid}});
 
         return fullNameValid && phoneValid && emailValid && pvzValid;
     }
@@ -74,6 +74,7 @@ function CartPage() {
         }
     }
 
+    // noinspection JSUnresolvedReference
     return (
         <motion.main className="cartPage"
                      initial={{opacity: 0}}
@@ -182,38 +183,43 @@ function CartPage() {
                         <section className="cartPage__pay pay">
                             <h2 className="pay__title">Оформление заказа</h2>
 
-                            <input type="text" onChange={(event) => setPayFullName({
+                            <input type="text" onChange={(event) => setFullName({
                                 value: event.target.value.trim(),
-                                valid: payFullName.valid
+                                valid: true
                             })}
                                    placeholder="ФИО (получатель товара)"
-                                   className={`pay__input ${payFullName.valid ? "" : "validateFailed"}`}/>
+                                   className={`pay__input ${fullName.valid ? "" : "validateFailed"}`}/>
                             <InputMask
                                 mask="(+7) 999 999 99 99"
-                                onChange={(event) => setPayPhone({
+                                onChange={(event) => setPhone({
                                     value: event.target.value.trim(),
-                                    valid: payPhone.valid
+                                    valid: true
                                 })}
-                                className={`pay__input ${payPhone.valid ? "" : "validateFailed"}`}
+                                className={`pay__input ${phone.valid ? "" : "validateFailed"}`}
                                 placeholder="Телефон"
                             />
                             <input type="email"
-                                   onChange={(event) => setPayEmail({
+                                   onChange={(event) => setEmail({
                                        value: event.target.value.trim(),
-                                       valid: payEmail.valid
+                                       valid: true
                                    })}
                                    placeholder="Email"
-                                   className={`pay__input ${payEmail.valid ? "" : "validateFailed"}`}/>
+                                   className={`pay__input ${email.valid ? "" : "validateFailed"}`}/>
 
-                            <div className="pay__pvz" onClick={() =>
-                                eval("boxberry.open((result) => { document.querySelector('.pay__pvz #pvz-address').value = result.address;" +
-                                    " document.querySelector('.pay__pvz #pvz-id').value = result.id;})")}>
+                            <div className="pay__pvz" onClick={() => {
+                                window.boxberry.open((result: IBoxberryResult): void => {
+                                    setPvz({
+                                        id: result.id,
+                                        address: result.address,
+                                        valid: true
+                                    })
+                                });
+                            }}>
                                 <input id="pvz-address" type="text" disabled={true}
                                        placeholder="Выбрать пункт выдачи"
-                                       className={`pay__input ${payPVZ.valid ? "" : "validateFailed"}`
-                                       }
+                                       className={`pay__input ${pvz.valid ? "" : "validateFailed"}`}
+                                       value={pvz.address}
                                 />
-                                <input id="pvz-id" type="text" hidden={true}/>
                             </div>
 
                             <button className="pay__button black-button"

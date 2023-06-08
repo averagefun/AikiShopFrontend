@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
-import {useSearchParams} from "react-router-dom";
+import React from 'react';
 import {Helmet} from "react-helmet";
 import {motion} from "framer-motion";
-import {useGetOrderStatusQuery, useGetProductsQuery} from "src/store/api/spring.api";
+import {useGetOrdersQuery, useGetProductsQuery} from "src/store/api/spring.api";
 import {useActions} from "src/hooks/actions";
-import {useAppSelector} from "src/hooks/redux";
-import {IOrder, IProduct, IProductSize} from "src/types/interfaces";
+import {IProduct, IProductSize} from "src/types/interfaces";
 import {displayPrice, formatDate} from "src/utils/utilFunctions";
 
 const getReadableOrderStatuses = (orderStatus: string): string => {
@@ -22,25 +20,18 @@ const getReadableOrderStatuses = (orderStatus: string): string => {
 }
 
 function OrdersHistoryPage() {
-    const [searchParams] = useSearchParams();
-    const newOrderId = searchParams.get("orderId") !== null ? parseInt(searchParams.get("orderId") as string) : 0;
-    const email = searchParams.get("email") !== null ? searchParams.get("email") as string : "";
-    const ordersHistory: IOrder[] = useAppSelector(state => state.ordersHistoryStore.ordersHistory);
+    const {data: ordersHistory} = useGetOrdersQuery(null);
     const isOrders = ordersHistory && ordersHistory.length > 0;
     const {data: products} = useGetProductsQuery(null);
 
-    const {data: newOrder} = useGetOrderStatusQuery({id: newOrderId, email: email}, {skip: newOrderId === 0});
-    const {deleteCart, addOrder, removeOrder} = useActions();
+    const {deleteCart} = useActions();
 
-    if (newOrder && !ordersHistory.find(order => order.id === newOrderId)) {
-        addOrder(newOrder);
-        if (newOrder.orderStatus === "successfullyPaid") {
-            deleteCart();
-        }
-    }
-
-    const [searchOrderId, setSearchOrderId] = useState<number>();
-    const [searchEmail, setSearchEmail] = useState<string>();
+    // if (newOrder && !ordersHistory.find(order => order.id === newOrderId)) {
+    //     addOrder(newOrder);
+    //     if (newOrder.orderStatus === "successfullyPaid") {
+    //         deleteCart();
+    //     }
+    // }
 
     return (
         <motion.main className="ordersHistoryPage"
@@ -62,13 +53,15 @@ function OrdersHistoryPage() {
                             {[...ordersHistory]
                                 .sort((order1, order2) => order2.id - order1.id)
                                 .map(order => {
-                                    const isFailed = order.orderStatus !== "successfullyPaid";
+                                    console.log(order.orderStatus);
+                                    const isFailed = false;
+
                                     return (
                                         <div key={order.id}
                                              className={`ordersHistoryPage__order order ${isFailed ? "order__failed" : ""}`}>
                                             <div className="order__number">Заказ №{`${order.id} от ${formatDate(order.creationTime)}`}</div>
                                             <div
-                                                className="order__status">{getReadableOrderStatuses(order.orderStatus)}</div>
+                                                className="order__status">Order status</div>
                                             {products && (
                                                 <ul className="order__sizes">
                                                     {Array.from(new Set<IProductSize>(order.selectedSizes))
@@ -87,23 +80,15 @@ function OrdersHistoryPage() {
                                                 </ul>
                                             )}
                                             <div className="order__amount">Итого: {displayPrice(order.amount)} ₽</div>
-                                            <button onClick={() => removeOrder(order)} className="order__hide"
-                                                    hidden={!isFailed}>Скрыть
-                                            </button>
+                                            {/*<button onClick={() => removeOrder(order)} className="order__hide"*/}
+                                            {/*        hidden={!isFailed}>Скрыть*/}
+                                            {/*</button>*/}
                                         </div>
                                     );
                                 })
                             }
                         </section>
                     )}
-                    <section className="ordersHistoryPage__order-search order-search">
-                        <h2 className="order-search__title">{isOrders ? "Заказ не отобразился в списке?" : "Если это не так, введите данные:"}</h2>
-                        <input type="email" onChange={(event) => setSearchOrderId(parseInt(event.target.value))}
-                               placeholder="Email" className="order-search__input"/>
-                        <input min={1} type="number" onChange={(event) => setSearchEmail(event.target.value)}
-                               placeholder="Номер заказа" className="order-search__input"/>
-                        <button className="order-search__button black-button">Найти заказ</button>
-                    </section>
                 </div>
             </div>
         </motion.main>
