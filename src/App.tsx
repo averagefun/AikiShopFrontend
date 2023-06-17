@@ -2,14 +2,14 @@ import React from 'react';
 import {Routes, Route, useLocation} from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-import Header from "./templates/header/Header";
-import Footer from "./templates/footer/Footer";
+import Header from "src/components/header/Header";
+import Footer from "src/components/footer/Footer";
 import ScrollToTop from "./utils/ScrollToTop";
 
 import MainPage from "./pages/main/MainPage"
 import ProductPage from "./pages/product/ProductPage";
 import ContactsPage from "./pages/contacts/ContactsPage";
-import OrdersHistoryPage from "./pages/orders_history/OrdersHistoryPage";
+import OrdersHistoryPage from "./pages/orders/OrdersHistoryPage";
 import CartPage from "./pages/cart/CartPage";
 
 import "./scss/style.scss"

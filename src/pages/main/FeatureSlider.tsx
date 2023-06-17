@@ -2,13 +2,16 @@ import React from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Autoplay, Navigation, Pagination} from "swiper";
 
-import {IFeatureSlide} from "src/types/interfaces";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-const featureSliderDesktop: IFeatureSlide[] = [
+interface FeatureSlide {
+    alt: string;
+    imagePath: string;
+}
+
+const featureSliderDesktop: FeatureSlide[] = [
     {
         alt: "Качественные ботинки Aiki из натуральной кожи со скидкой - весенняя распродажа",
         imagePath: require('../../assets/features/desktop/50_spring.jpg')
@@ -35,7 +38,7 @@ const featureSliderDesktop: IFeatureSlide[] = [
     }
 ]
 
-const featureSliderMobile: IFeatureSlide[] = [
+const featureSliderMobile: FeatureSlide[] = [
     {
         alt: "Качественные ботинки Aiki из натуральной кожи со скидкой - весенняя распродажа",
         imagePath: require('../../assets/features/mobile/50_spring.jpg')

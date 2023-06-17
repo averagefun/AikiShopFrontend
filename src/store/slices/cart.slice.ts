@@ -1,12 +1,19 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ICartItem, ICartItemChangeEvent, IProductSize} from "src/types/interfaces";
+import {CartItem, ProductSize} from "src/types/interfaces";
+
+interface CartItemChangeEvent {
+    productId: number;
+    sizeId: number;
+    article: string;
+    size: string;
+}
 
 interface CartState {
-    cart: ICartItem[];
+    cart: CartItem[];
 }
 
 const cartProducts = localStorage.getItem("cartProducts") != null ?
-    JSON.parse(localStorage.getItem("cartProducts") as string) as ICartItem[] : []
+    JSON.parse(localStorage.getItem("cartProducts") as string) as CartItem[] : []
 
 const initialState: CartState = {
     cart: cartProducts
@@ -16,8 +23,8 @@ export const cartSlice = createSlice({
     name: "cartProducts",
     initialState: initialState,
     reducers: {
-        addToCart: (state, action: PayloadAction<ICartItemChangeEvent>) => {
-            const foundItem: ICartItem | undefined = state.cart.find(product => product.productId === action.payload.productId);
+        addToCart: (state, action: PayloadAction<CartItemChangeEvent>) => {
+            const foundItem: CartItem | undefined = state.cart.find(product => product.productId === action.payload.productId);
             if (foundItem) {
                 foundItem.sizes.push({
                     id: action.payload.sizeId,
@@ -38,15 +45,15 @@ export const cartSlice = createSlice({
             }
             localStorage.setItem("cartProducts", JSON.stringify(state.cart));
         },
-        incrementSize: (state, action: PayloadAction<ICartItemChangeEvent>) => {
-            const foundItem: ICartItem = state.cart.find(item => item.productId === action.payload.productId) as ICartItem;
-            const foundSize: IProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as IProductSize;
+        incrementSize: (state, action: PayloadAction<CartItemChangeEvent>) => {
+            const foundItem: CartItem = state.cart.find(item => item.productId === action.payload.productId) as CartItem;
+            const foundSize: ProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as ProductSize;
             foundSize.count++;
             localStorage.setItem("cartProducts", JSON.stringify(state.cart));
         },
-        decrementSize: (state, action: PayloadAction<ICartItemChangeEvent>) => {
-            const foundItem: ICartItem = state.cart.find(item => item.productId === action.payload.productId) as ICartItem;
-            const foundSize: IProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as IProductSize;
+        decrementSize: (state, action: PayloadAction<CartItemChangeEvent>) => {
+            const foundItem: CartItem = state.cart.find(item => item.productId === action.payload.productId) as CartItem;
+            const foundSize: ProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as ProductSize;
             foundSize.count--;
 
             if (foundSize.count === 0) {
@@ -58,9 +65,9 @@ export const cartSlice = createSlice({
             }
             localStorage.setItem("cartProducts", JSON.stringify(state.cart));
         },
-        deleteSize: (state, action: PayloadAction<ICartItemChangeEvent>) => {
-            const foundItem: ICartItem = state.cart.find(item => item.productId === action.payload.productId) as ICartItem;
-            const foundSize: IProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as IProductSize;
+        deleteSize: (state, action: PayloadAction<CartItemChangeEvent>) => {
+            const foundItem: CartItem = state.cart.find(item => item.productId === action.payload.productId) as CartItem;
+            const foundSize: ProductSize = foundItem.sizes.find(size => size.size === action.payload.size) as ProductSize;
             foundSize.count = 0;
 
             foundItem.sizes = foundItem.sizes.filter(size => size.size !== action.payload.size);

@@ -1,8 +1,8 @@
-interface IBoxberryResult {
+interface BoxberryResult {
     id: string,
     address: string
 }
-type BoxberryCallbackFunction = (result: IBoxberryResult) => void;
+type BoxberryCallbackFunction = (result: BoxberryResult) => void;
 
 interface Window {
     boxberry: {

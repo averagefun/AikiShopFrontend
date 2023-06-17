@@ -14,9 +14,4 @@ export function formatDate(date: Date) {
             date.getFullYear(),
         ].join('.')
     );
-        // ' ' +
-        // [
-        //     padTo2Digits(date.getHours()),
-        //     padTo2Digits(date.getMinutes()),
-        // ].join(':')
 }

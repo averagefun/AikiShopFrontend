@@ -2,18 +2,22 @@
   &__title {
     font-size: rem(30);
     font-weight: 700;
-    margin: 23px 0;
+    margin: 23px 0 15px;
 
     @media screen and (max-width: $mb) {
       margin: 20px 0;
     }
   }
 
+  &__login-btn {
+    padding: 8px 15px;
+  }
+
   &__content {
     width: 100%;
     display: flex;
     gap: 20px;
-    padding-bottom: 15px;
+    padding: 15px 0;
 
     @media screen and (max-width: 920px) {
       flex-direction: column;

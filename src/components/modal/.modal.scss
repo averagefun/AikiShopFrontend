@@ -1,0 +1,39 @@
+.loginModal {
+  position: absolute;
+  border-radius: 1em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: $white;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $black-trans;
+  }
+
+  &__title {
+    font-size: rem(20);
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: rem(15);
+  }
+
+  &__button {
+    padding: 10px 20px;
+    display: block;
+    margin: 15px auto 0;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  &__error-message {
+    color: $red;
+    padding-left: 7px;
+  }
+
+  &__input {}
+}

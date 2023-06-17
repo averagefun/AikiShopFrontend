@@ -122,8 +122,8 @@
   }
 }
 
-.pay {
-    max-width: 350px;
+.checkout {
+    min-width: 400px;
     padding: 12px;
     align-self: flex-start;
     box-shadow: 0 0 2px 0 #aaa;
@@ -159,36 +159,15 @@
   &__button {
     padding: 12px 20px;
     display: block;
-    margin: 0 auto;
+    margin: 12px auto 0;
     width: 100%;
     max-width: 350px;
   }
 
-  &__input {
-    width: 100%;
-    display: block;
-    font-size: rem(18);
-    box-shadow: 0 0 2px 0 #aaa;
-    padding: 5px 10px;
-    margin: 10px 0;
-    border-radius: 1em;
-
-    &.validateFailed {
-      border: 1px solid $red;
-
-      &::placeholder {
-        color: $red;
-        opacity: 1;
-      }
-    }
+  &__error-message {
+    color: $red;
+    padding-left: 7px;
   }
 
-  &__pvz {
-    cursor: pointer;
-
-    input {
-      cursor: pointer;
-      color: black;
-    }
-  }
+  &__input {}
 }

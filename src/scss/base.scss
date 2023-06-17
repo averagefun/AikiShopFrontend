@@ -237,3 +237,37 @@ input[type=number] {
     padding: 14px 20px;
     font-size: rem(18);
 }
+
+// Forms
+
+.form-input {
+    width: 100%;
+    display: block;
+    font-size: rem(18);
+    box-shadow: 0 0 2px 0 #aaa;
+    padding: 5px 10px;
+    margin: 10px 0;
+    border-radius: 1em;
+
+    &.validateFailed {
+        border: 1px solid $red;
+
+        &::placeholder {
+            color: $red;
+            opacity: 1;
+        }
+    }
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.fake-active-input {
+    background: $white;
+    color: $black;
+}
+
+input[disabled] {
+    pointer-events:none
+}

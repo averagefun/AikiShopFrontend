@@ -36,6 +36,7 @@ function MainPage() {
                     {products && products.map((product, i) => (
                         <ProductCard key={i} className="main__product" product={product}/>
                     ))}
+
                     {!isMobile && (
                         <FeatureSlider className="main__product product main__featureSlider" isMobile={false}/>
                     )}

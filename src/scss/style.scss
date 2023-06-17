@@ -2,11 +2,14 @@
 @import "base"; // Подключение базовых стилей
 @import "fonts"; // Подключение шрифтов
 
-@import "../templates/header/.header";
-@import "../templates/footer/.footer";
+// components
+@import "../components/header/.header";
+@import "../components/footer/.footer";
+@import "../components/modal/.modal";
 
+// pages
 @import "../pages/main/.main.scss";
 @import "../pages/product/.product";
 @import "../pages/contacts/.contacts";
-@import "../pages/orders_history/.ordersHistory";
+@import "../pages/orders/.ordersHistory";
 @import "../pages/cart/.cart";

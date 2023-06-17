@@ -1,30 +1,18 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-// import { MappingPair, MapperConfiguration } from '@dynamic-mapper/mapper'
-import {IOrder, IOrderRegisterResponse, IOrderRequestDTO, IOrderResponseDTO, IProduct} from "src/types/interfaces";
+import {
+    LoginDTO,
+    RegisterDTO,
+    LoginResponse,
+    Order,
+    OrderCreateResponseDTO,
+    OrderRequestDTO,
+    OrderResponseDTO,
+    Product, Customer, MessageDTO, AuthState
+}
+    from "src/types/interfaces";
+import {mapperOrderResponseDtoToOrder, orderResponseDtoToOrder} from "src/types/mappers";
 
-const jwtToken = localStorage.getItem("jwtToken");
-
-// const CustomerDtoToCustomer = new MappingPair<CustomerDto, Customer>();
-//
-// const configuration = new MapperConfiguration(cfg => {
-//     cfg.createAutoMap(CustomerDtoToCustomer, {
-//         fullName: opt => opt.mapFrom(src => `${src.firstName} ${src.lastName}`)
-//     });
-// });
-//
-// const mapper = configuration.createMapper();
-//
-// const customerDto: CustomerDto = {
-//     firstName: 'John',
-//     lastName: 'Doe'
-// };
-
-// const orderResponseDtoToOrder = new MappingPair<IOrderResponseDTO, IOrder>();
-//
-// const configuration = new MapperConfiguration( => {
-//     cfg.createAutoMap(orderResponseDtoToOrder, {
-//     });
-// });
+const jwtToken = () => localStorage.getItem("jwtToken");
 
 export const springApi = createApi({
     reducerPath: "spring/api",
@@ -32,43 +20,86 @@ export const springApi = createApi({
         baseUrl: process.env.REACT_APP_BASE_SPRING_URL,
     }),
     endpoints: build => ({
-        getProducts: build.query<IProduct[], null>({
+        getProducts: build.query<Product[], null>({
             query: () => ({
                 url: "/products"
             })
         }),
-        getProduct: build.query<IProduct, number>({
+        getProduct: build.query<Product, number>({
             query: (id: number) => ({
                 url: `/products/${id}`
             })
         }),
-        createOrder: build.mutation<IOrderRegisterResponse, IOrderRequestDTO>({
+        generatePassword: build.mutation<MessageDTO, RegisterDTO>({
+            query: (body) => ({
+                url: "/auth/genpass",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body
+            })
+        }),
+        login: build.mutation<LoginResponse, LoginDTO>({
+            query: (body) => ({
+                url: "/auth/login",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body
+            })
+        }),
+        checkAuth: build.query <AuthState, null>({
+            query: () => ({
+                url: "/user",
+                headers: {
+                    "Authorization": `Bearer ${jwtToken()}`
+                }
+            }),
+            transformResponse: (customer: Customer): AuthState => {
+                return {
+                    isAuthorized: true,
+                    customer: customer
+                }
+            },
+            transformErrorResponse: (): AuthState => {
+                return {
+                    isAuthorized: false,
+                    customer: null
+                }
+            }
+
+        }),
+        createOrder: build.mutation<OrderCreateResponseDTO, OrderRequestDTO>({
             query: (body) => ({
                 url: "/orders/create",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwtToken}`
+                    "Authorization": `Bearer ${jwtToken()}`
                 },
                 body
             })
-         }),
-        getOrders: build.query<IOrder[], null>({
+        }),
+        getOrders: build.query<Order[], null>({
             query: () => ({
                 url: `/orders`,
                 headers: {
-                    "Authorization": `Bearer ${jwtToken}`
+                    "Authorization": `Bearer ${jwtToken()}`
                 }
             }),
-            transformResponse: (response: IOrder[]): IOrder[] => {
-                response.forEach(order => {
-                    order.creationTime = new Date(order.creationTime);
-                })
-                return response;
+            transformResponse: (response: OrderResponseDTO[]): Order[] => {
+                return response.map((orderResponseDTO) =>
+                    mapperOrderResponseDtoToOrder.map(orderResponseDtoToOrder, orderResponseDTO));
             }
         }),
     })
 })
 
-export const {useGetProductsQuery, useGetProductQuery,
-    useCreateOrderMutation, useGetOrdersQuery} = springApi;
+export const {
+    useGetProductsQuery, useGetProductQuery,
+    useGeneratePasswordMutation, useLoginMutation,
+    useCheckAuthQuery,
+    useCreateOrderMutation, useGetOrdersQuery
+} = springApi;

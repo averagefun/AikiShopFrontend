@@ -1,15 +1,15 @@
 import React from 'react';
-import {IProduct, IProductImage} from "src/types/interfaces";
+import {Product, ProductImage} from "src/types/interfaces";
 import {Link} from "react-router-dom";
-import {displayPrice} from "src/utils/utilFunctions";
+import {displayPrice} from "src/utils/functions";
 
 interface ProductCardProps {
     className: string;
-    product: IProduct;
+    product: Product;
 }
 
 function ProductCard(props: ProductCardProps) {
-    const mainImage: IProductImage = [...props.product.images].sort(
+    const mainImage: ProductImage = [...props.product.images].sort(
         (image1, image2) => image1.priority - image2.priority)[0];
 
     let discount = 0

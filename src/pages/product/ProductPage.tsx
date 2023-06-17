@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {IProductFeature, IProductImage, IProductSize} from "src/types/interfaces";
+import {ProductFeature, ProductImage, ProductSize} from "src/types/interfaces";
 import ProductCart from "./ProductCart";
 
 import {useGetProductQuery} from "src/store/api/spring.api";
@@ -9,7 +9,7 @@ import {useParams, useSearchParams} from "react-router-dom";
 import {motion} from "framer-motion";
 import {Helmet} from "react-helmet";
 import ProductSizeChooser from "./ProductSizeChooser";
-import {displayPrice} from "src/utils/utilFunctions";
+import {displayPrice} from "src/utils/functions";
 
 function ProductPage() {
     const {id} = useParams();
@@ -18,9 +18,9 @@ function ProductPage() {
     const {data: product} = useGetProductQuery(parseInt(id as string));
 
     if (product) {
-        const images: IProductImage[] = product.images;
-        const sizes: IProductSize[] = product.sizes;
-        const features: IProductFeature[] = product.features;
+        const images: ProductImage[] = product.images;
+        const sizes: ProductSize[] = product.sizes;
+        const features: ProductFeature[] = product.features;
 
         return (
             <motion.main className="productPage"

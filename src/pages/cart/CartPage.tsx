@@ -4,39 +4,49 @@ import React, {useState} from 'react';
 
 import {Link} from "react-router-dom";
 import {useAppSelector} from "src/hooks/redux";
-import {useCreateOrderMutation, useGetProductsQuery} from "src/store/api/spring.api";
+import {useCheckAuthQuery, useCreateOrderMutation, useGetProductsQuery} from "src/store/api/spring.api";
 import {motion} from "framer-motion";
 
-import {ICartItem, IProduct, IProductSize, IOrderRegisterResponse, IOrderRequestDTO} from "src/types/interfaces";
+import {
+    CartItem, Product, ProductSize, OrderRequestDTO, StringFormFieldState, OrderCreateResponseDTO, Customer, AuthState,
+} from "src/types/interfaces";
 import {Helmet} from "react-helmet";
 import {useActions} from "src/hooks/actions";
-import {displayPrice} from "src/utils/utilFunctions";
+import {displayPrice} from "src/utils/functions";
 import InputMask from 'react-input-mask';
-
-interface fieldState {
-    value: string;
-    valid: boolean;
-}
+import LoginModal from "src/components/modal/LoginModal";
 
 function CartPage() {
-    const cartItems: ICartItem[] = useAppSelector(state => state.cartStore.cart);
+    const {data: authState, refetch: updateAuth} = useCheckAuthQuery(null);
+    const isAuthorized: boolean = authState ? authState.isAuthorized : false;
+    const customer: Customer | null = isAuthorized ? (authState as AuthState).customer as Customer : null;
+
+    const cartItems: CartItem[] = useAppSelector(state => state.cartStore.cart);
     const [createOrder] = useCreateOrderMutation();
     const {data: products} = useGetProductsQuery(null);
     const {incrementSize, decrementSize, deleteSize} = useActions();
 
-    const [fullName, setFullName] = useState<fieldState>({value: "", valid: true});
-    const [phone, setPhone] = useState<fieldState>({value: "", valid: true});
-    const [email, setEmail] = useState<fieldState>({value: "", valid: true});
-    const [pvz, setPvz] = useState<
-        {id: string, address: string, valid: boolean}>(
-        {id: "", address: "", valid: true});
+    const [fullName, setFullName] = useState<StringFormFieldState>({value: "", valid: true});
+    const [phone, setPhone] = useState<StringFormFieldState>({value: "", valid: true});
+    const [pvz, setPvz] = useState<{ id: string, address: string, valid: boolean }>({id: "", address: "", valid: true});
+    const [oldCustomerId, setOldCustomerId] = useState<number>(0);
 
-    const calculateCart = (): IOrderRequestDTO => {
+    if (customer && customer.id != oldCustomerId) {
+        setFullName({value: customer.defaultFullName ? customer.defaultFullName : "", valid: true});
+        setPhone({value: customer.defaultPhone ? customer.defaultPhone : "", valid: true});
+        setPvz({id: "", address: customer.defaultDeliveryAddress ? customer.defaultDeliveryAddress : "", valid: true});
+        setOldCustomerId(customer.id);
+    }
+
+    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+    const toggleModal = (state: boolean) => setModalIsOpen(state);
+
+    const calculateCart = (): OrderRequestDTO => {
         const sizesList: number[] = [];
         let productsAmount = 0;
         if (products) {
             cartItems.forEach(item => {
-                const product = products.find(product => item.productId === product.id) as IProduct;
+                const product = products.find(product => item.productId === product.id) as Product;
                 item.sizes.forEach(size => {
                     productsAmount += size.count * product.price;
                     sizesList.push(...Array(size.count).fill(size.id));
@@ -45,8 +55,10 @@ function CartPage() {
         }
         return {
             amount: productsAmount,
-            phone: phone.value.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', ''),
-            deliveryCode: pvz.id, selectedSizes: sizesList
+            fullName: fullName.value.trim(),
+            phone: phone.value.trim(),
+            deliveryAddress: pvz.address.trim(),
+            selectedSizes: sizesList
         };
     }
 
@@ -57,24 +69,25 @@ function CartPage() {
         const phoneValid = phone.value.length > 0 && !phone.value.includes("_");
         setPhone({...phone, ...{valid: phoneValid}});
 
-        const emailValid = email.value.length > 0 && /^(.+)@(.+)$/.test(email.value);
-        setEmail({...email, ...{valid: emailValid}});
-
-        // const pvzId = (document.querySelector(".pay__pvz #pvz-id") as HTMLInputElement).value;
-        const pvzValid = pvz.id.length > 0 && pvz.address.length > 0;
+        const pvzValid = pvz.address.length > 0;
         setPvz({...pvz, ...{valid: pvzValid}});
 
-        return fullNameValid && phoneValid && emailValid && pvzValid;
+        return fullNameValid && phoneValid && pvzValid;
     }
 
-    const checkoutHandler = async () => {
+    const [error, setError] = useState<string>();
+
+    const checkoutHandler = () => {
         if (validateForm()) {
-            const response: IOrderRegisterResponse = await createOrder(calculateCart()).unwrap();
-            window.location.href = response.formUrl;
+            createOrder(calculateCart())
+                .unwrap()
+                .then((response: OrderCreateResponseDTO) => {
+                    window.location.href = response.paymentUrl;
+                })
+                .catch((error) => setError(error.data.message));
         }
     }
 
-    // noinspection JSUnresolvedReference
     return (
         <motion.main className="cartPage"
                      initial={{opacity: 0}}
@@ -97,7 +110,7 @@ function CartPage() {
                                     const product = products.find(product => product.id === item.productId);
                                     if (product) {
                                         return item.sizes.map((size, i2) => {
-                                            const productSize = product.sizes.find(productSize => productSize.size === size.size) as IProductSize;
+                                            const productSize = product.sizes.find(productSize => productSize.size === size.size) as ProductSize;
 
                                             const minusHandler = (): void => {
                                                 if (size && size.count >= 1) {
@@ -180,49 +193,69 @@ function CartPage() {
                                 }
                             )}
                         </section>
-                        <section className="cartPage__pay pay">
-                            <h2 className="pay__title">Оформление заказа</h2>
+                        <section className="cartPage__checkout checkout">
+                            <h2 className="checkout__title">Оформление заказа</h2>
 
-                            <input type="text" onChange={(event) => setFullName({
-                                value: event.target.value.trim(),
-                                valid: true
-                            })}
-                                   placeholder="ФИО (получатель товара)"
-                                   className={`pay__input ${fullName.valid ? "" : "validateFailed"}`}/>
-                            <InputMask
-                                mask="(+7) 999 999 99 99"
-                                onChange={(event) => setPhone({
-                                    value: event.target.value.trim(),
-                                    valid: true
-                                })}
-                                className={`pay__input ${phone.valid ? "" : "validateFailed"}`}
-                                placeholder="Телефон"
-                            />
-                            <input type="email"
-                                   onChange={(event) => setEmail({
-                                       value: event.target.value.trim(),
+                            <div className="pointer"
+                                 onClick={() => toggleModal(true)}>
+                                <input type="text"
+                                       disabled={true}
+                                       placeholder="Email"
+                                       value={customer ? customer.email : ""}
+                                       className={`checkout__input form-input fake-active-input ${isAuthorized && authState && authState.customer ? "" : "validateFailed"}`}
+                                />
+                            </div>
+                            <LoginModal isOpen={modalIsOpen} toggle={toggleModal} updateAuth={updateAuth}/>
+
+                            <input type="text"
+                                   disabled={!isAuthorized}
+                                   value={fullName.value}
+                                   onChange={(event) => setFullName({
+                                       value: event.target.value,
                                        valid: true
                                    })}
-                                   placeholder="Email"
-                                   className={`pay__input ${email.valid ? "" : "validateFailed"}`}/>
+                                   placeholder="ФИО (получатель товара)"
+                                   className={`checkout__input form-input ${fullName.valid ? "" : "validateFailed"}`}/>
+                            <InputMask
+                                disabled={!isAuthorized}
+                                value={phone.value}
+                                mask="(+7) 999 999 99 99"
+                                onChange={(event) => setPhone({
+                                    value: event.target.value.trim().replaceAll(
+                                        ' ', '').replaceAll(
+                                        '(', '').replaceAll(
+                                        ')', ''),
+                                    valid: true
+                                })}
+                                className={`checkout__input form-input ${phone.valid ? "" : "validateFailed"}`}
+                                placeholder="Телефон"
+                            />
 
-                            <div className="pay__pvz" onClick={() => {
-                                window.boxberry.open((result: IBoxberryResult): void => {
-                                    setPvz({
-                                        id: result.id,
-                                        address: result.address,
-                                        valid: true
-                                    })
-                                });
-                            }}>
-                                <input id="pvz-address" type="text" disabled={true}
+                            <div className={isAuthorized ? "pointer" : ""}
+                                 onClick={() => {
+                                     if (isAuthorized) {
+                                         window.boxberry.open((result: BoxberryResult): void => {
+                                             setPvz({
+                                                 id: result.id,
+                                                 address: result.address,
+                                                 valid: true
+                                             })
+                                         });
+                                     }
+                                 }}>
+                                <input id="pvz-address" type="text"
+                                       disabled={true}
                                        placeholder="Выбрать пункт выдачи"
-                                       className={`pay__input ${pvz.valid ? "" : "validateFailed"}`}
+                                       className={`checkout__input form-input ${pvz.valid ? "" : "validateFailed"} ${isAuthorized ? "fake-active-input" : ""}`}
                                        value={pvz.address}
                                 />
                             </div>
 
-                            <button className="pay__button black-button"
+                            {error && (
+                                <div className="checkout__error-message">{error}</div>
+                            )}
+
+                            <button className="checkout__button black-button"
                                     onClick={checkoutHandler}>
                                 Оформить заказ
                             </button>

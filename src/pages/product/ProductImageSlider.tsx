@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Swiper, SwiperSlide} from "swiper/react";
 import {FreeMode, Navigation, Thumbs} from "swiper";
-import {IProductImage} from "src/types/interfaces";
+import {ProductImage} from "src/types/interfaces";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -10,7 +10,7 @@ import "swiper/css/thumbs";
 
 interface ProductImageSliderProps {
     className: string;
-    images: IProductImage[];
+    images: ProductImage[];
 }
 
 function ProductImageSlider(props: ProductImageSliderProps) {

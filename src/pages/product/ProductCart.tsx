@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ICartItem, IProductSize} from "src/types/interfaces";
+import {CartItem, ProductSize} from "src/types/interfaces";
 import {useActions} from "src/hooks/actions";
 import {useAppSelector} from "src/hooks/redux";
 import {Link} from "react-router-dom";
@@ -8,18 +8,18 @@ interface ProductCartProps {
     className: string;
     productID: number;
     startSize?: string;
-    productSizes: IProductSize[];
+    productSizes: ProductSize[];
 }
 
 function ProductCart(props: ProductCartProps) {
-    let defaultSize: IProductSize | undefined = props.productSizes.find(size => size.size === (props.startSize ? props.startSize : "38"))
+    let defaultSize: ProductSize | undefined = props.productSizes.find(size => size.size === (props.startSize ? props.startSize : "38"))
     if (!defaultSize) {
         defaultSize = props.productSizes[0];
     }
     const [sizeActive, setSizeActive] = useState(defaultSize);
 
     const {addToCart, incrementSize, decrementSize} = useActions()
-    const currItemCart = useAppSelector(state => state.cartStore.cart.find(product => product.productId === props.productID)) as ICartItem;
+    const currItemCart = useAppSelector(state => state.cartStore.cart.find(product => product.productId === props.productID)) as CartItem;
 
     const minusHandler = (): void => {
         const currItemCartSize = currItemCart.sizes.find(size => size.size === sizeActive.size);
@@ -59,7 +59,7 @@ function ProductCart(props: ProductCartProps) {
                                         ${sizeActive.size === size.size ? "_active" : ""}
                                         `}
                                 onClick={size.count > 0 ? () => {
-                                    setSizeActive(props.productSizes.find(iterSize => iterSize.size === size.size) as IProductSize);
+                                    setSizeActive(props.productSizes.find(iterSize => iterSize.size === size.size) as ProductSize);
                                 } : () => null}
                             >{size.size}</li>
                         ))}
@@ -86,7 +86,7 @@ function ProductCart(props: ProductCartProps) {
                             </button>
                             <input className="counter__input"
                                    readOnly={true}
-                                   value={(currItemCart.sizes.find(size => size.size === sizeActive.size) as IProductSize).count}
+                                   value={(currItemCart.sizes.find(size => size.size === sizeActive.size) as ProductSize).count}
                                    type="number" min="1"
                                    max="5"/>
                             <button className="counter__button" onClick={plusHandler}>

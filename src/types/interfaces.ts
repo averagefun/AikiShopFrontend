@@ -1,64 +1,85 @@
-export interface IFeatureSlide {
-    alt: string;
-    imagePath: string;
-}
+// ** PRODUCTS **
 
-export interface IProductSize {
+export interface ProductSize {
     id: number;
     article: string;
     size: string;
     count: number;
 }
 
-export interface IProductImage {
+export interface ProductImage {
     id?: number;
     imagePath: string;
     alt: string;
     priority: number;
 }
 
-export interface IProductFeature {
+export interface ProductFeature {
     id?: number;
     feature: string;
     priority: number;
 }
 
-export interface IProduct {
+export interface Product {
     id: number;
     name: string;
     oldPrice?: number;
     price: number;
-    sizes: IProductSize[];
-    images: IProductImage[];
-    features: IProductFeature[];
+    sizes: ProductSize[];
+    images: ProductImage[];
+    features: ProductFeature[];
 }
 
-export interface ICartItem {
+export interface CartItem {
     productId: number;
-    sizes: IProductSize[];
+    sizes: ProductSize[];
 }
 
-export interface ICartItemChangeEvent {
-    productId: number;
-    sizeId: number;
-    article: string;
-    size: string;
+// ** AUTH **
+export interface LoginDTO {
+    email: string;
+    password: string;
 }
 
-export interface IOrder {
+export interface RegisterDTO {
+    email: string;
+}
+
+export interface AuthState {
+    isAuthorized: boolean;
+    customer: Customer | null;
+}
+
+// ** CUSTOMER **
+export interface Customer {
     id: number;
-    creationTime: Date;
-    amount: number;
-    orderStatus: OrderStatus;
-    phone: string;
-    selectedSizes: IProductSize[];
+    email: string;
+    defaultFullName: string | null;
+    defaultPhone: string | null;
+    defaultDeliveryAddress: string | null;
 }
 
-export interface IOrderRequestDTO {
+export interface LoginResponse {
+    jwtToken: string;
+}
+
+// ** ORDERS **
+
+export interface OrderRequestDTO {
     amount: number;
+    fullName: string;
     phone: string;
-    deliveryCode: string;
+    deliveryAddress: string;
     selectedSizes: number[];
+}
+
+export interface OrderResponseDTO {
+    id: number;
+    creationTime: number[];
+    amount: number;
+    orderStatus: string;
+    phone: string;
+    selectedSizes: ProductSize[];
 }
 
 export enum OrderStatus {
@@ -66,24 +87,39 @@ export enum OrderStatus {
     DELIVERING, DELIVERED
 }
 
-// WAITING_FOR_PAYMENT("Ожидание оплаты"),
-//     CANCELED("Отменен"),
-//     SUCCESSFULLY_PAID("Успешно оплачен"),
-//     PAYMENT_ERROR("Ошибка при оплате"),
-//     PAYMENT_RETURNED("Проведена операция возврата"),
-//     DELIVERING("Доставляется"),
-//     DELIVERED("Доставлен");
+export const FailedOrderStatuses = [OrderStatus.CANCELED, OrderStatus.PAYMENT_ERROR, OrderStatus.PAYMENT_RETURNED];
 
-export interface IOrderResponseDTO {
+export const OrderSatusLabel = new Map<number, string>([
+    [OrderStatus.WAITING_FOR_PAYMENT, "Ожидание оплаты"],
+    [OrderStatus.CANCELED, 'Отменен'],
+    [OrderStatus.SUCCESSFULLY_PAID, 'Успешно оплачен - готовим к отправке'],
+    [OrderStatus.PAYMENT_ERROR, 'Ошибка при оплате заказа'],
+    [OrderStatus.PAYMENT_RETURNED, 'Возврат товара'],
+    [OrderStatus.DELIVERING, 'Доставляется'],
+    [OrderStatus.DELIVERED, 'Успешно доставлен'],
+]);
+
+export interface Order {
     id: number;
     creationTime: Date;
     amount: number;
     orderStatus: OrderStatus;
     phone: string;
-    selectedSizes: number[];
+    selectedSizes: ProductSize[];
 }
 
-export interface IOrderRegisterResponse {
-    orderId: string,
-    formUrl: string
+export interface OrderCreateResponseDTO {
+    paymentId: string;
+    paymentUrl: string;
+}
+
+// ** FORMS **
+export interface StringFormFieldState {
+    value: string;
+    valid: boolean;
+}
+
+// ** OTHER **
+export interface MessageDTO {
+    message: string;
 }
