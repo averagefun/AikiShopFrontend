@@ -1,1 +1,3 @@
-# AikiShop - Frontend (React TypeScript + Redux Toolkit)
+# AikiShop - Frontend
+
+### Реализация: React TypeScript + Redux Toolkit
