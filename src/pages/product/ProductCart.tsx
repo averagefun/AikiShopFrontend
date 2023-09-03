@@ -12,10 +12,18 @@ interface ProductCartProps {
 }
 
 function ProductCart(props: ProductCartProps) {
-    let defaultSize: ProductSize | undefined = props.productSizes.find(size => size.size === (props.startSize ? props.startSize : "38"))
-    if (!defaultSize) {
-        defaultSize = props.productSizes[0];
+    let defaultSize = props.productSizes[0];
+
+    let foundSize = props.productSizes.find(size => size.size === (props.startSize ? props.startSize : "38") && size.count > 0);
+    if (foundSize) {
+        defaultSize = foundSize;
+    } else {
+        foundSize = props.productSizes.find(size => size.count > 0);
+        if (foundSize) {
+            defaultSize = foundSize;
+        }
     }
+
     const [sizeActive, setSizeActive] = useState(defaultSize);
 
     const {addToCart, incrementSize, decrementSize} = useActions()
@@ -35,7 +43,7 @@ function ProductCart(props: ProductCartProps) {
 
     const plusHandler = (): void => {
         const currItemCartSize = currItemCart.sizes.find(size => size.size === sizeActive.size);
-        if (currItemCartSize && currItemCartSize.count < Math.min(sizeActive.count, 5)) {
+        if (currItemCartSize && currItemCartSize.count < Math.min(sizeActive.count, 2)) {
             incrementSize({
                 productId: props.productID,
                 article: currItemCartSize.article,
@@ -56,7 +64,7 @@ function ProductCart(props: ProductCartProps) {
                             <li key={i} className={
                                 `product-cart__size-item 
                                         ${size.count > 0 ? "" : "crossed-circle"} 
-                                        ${sizeActive.size === size.size ? "_active" : ""}
+                                        ${sizeActive.size === size.size && sizeActive.count > 0 ? "_active" : ""}
                                         `}
                                 onClick={size.count > 0 ? () => {
                                     setSizeActive(props.productSizes.find(iterSize => iterSize.size === size.size) as ProductSize);
@@ -68,6 +76,7 @@ function ProductCart(props: ProductCartProps) {
             <div className="product-cart__bottom">
                 {(!currItemCart || !currItemCart.sizes.find(size => size.size === sizeActive.size)) ? (
                     <button className="product-cart__btn black-button"
+                            disabled={!(sizeActive.count > 0)}
                             onClick={() => addToCart({
                                 productId: props.productID,
                                 article: sizeActive.article,

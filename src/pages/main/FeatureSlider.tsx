@@ -13,11 +13,11 @@ interface FeatureSlide {
 
 const featureSliderDesktop: FeatureSlide[] = [
     {
-        alt: "Качественные ботинки Aiki из натуральной кожи со скидкой - весенняя распродажа",
-        imagePath: require('../../assets/features/desktop/50_spring.jpg')
+        alt: "Качественные ботинки Aiki из натуральной кожи со скидкой - осенняя распродажа",
+        imagePath: require('../../assets/features/desktop/50.jpg')
     },
     {
-        alt: "Надежные и стильные Aiki Shoes, весенняя коллекция",
+        alt: "Надежные и стильные Aiki Shoes, осенняя коллекция",
         imagePath: require('../../assets/features/desktop/37.jpg')
     },
     {
@@ -25,12 +25,12 @@ const featureSliderDesktop: FeatureSlide[] = [
         imagePath: require('../../assets/features/desktop/40.jpg')
     },
     {
-        alt: "Весенняя распродажа! Огромные скидки при покупке ботинок Aiki в магазине Aiki Shoes",
+        alt: "Осенняя распродажа! Огромные скидки при покупке ботинок Aiki в магазине Aiki Shoes",
         imagePath: require('../../assets/features/desktop/44.jpg')
     },
     {
         alt: "Только натуральная кожа - ботинки Aiki",
-        imagePath: require('../../assets/features/desktop/31_spring.jpg')
+        imagePath: require('../../assets/features/desktop/31.jpg')
     },
     {
         alt: "Ручная работа с особым вниманием ко всем деталям",
@@ -40,11 +40,11 @@ const featureSliderDesktop: FeatureSlide[] = [
 
 const featureSliderMobile: FeatureSlide[] = [
     {
-        alt: "Качественные ботинки Aiki из натуральной кожи со скидкой - весенняя распродажа",
-        imagePath: require('../../assets/features/mobile/50_spring.jpg')
+        alt: "Качественные ботинки Aiki из натуральной кожи со скидкой - осенняя распродажа",
+        imagePath: require('../../assets/features/mobile/50.jpg')
     },
     {
-        alt: "Надежные и стильные Aiki Shoes Весна",
+        alt: "Надежные и стильные Aiki Shoes Осень",
         imagePath: require('../../assets/features/mobile/37.jpg')
     },
     {
@@ -52,12 +52,12 @@ const featureSliderMobile: FeatureSlide[] = [
         imagePath: require('../../assets/features/mobile/40.jpg')
     },
     {
-        alt: "Огромные скидки на весенней распродаже при покупке ботинок Aiki в магазине Aiki Shoes",
+        alt: "Огромные скидки на осенней распродаже при покупке ботинок Aiki в магазине Aiki Shoes",
         imagePath: require('../../assets/features/mobile/44.jpg')
     },
     {
         alt: "Только натуральная кожа - ботинки Aiki",
-        imagePath: require('../../assets/features/mobile/31_spring.jpg')
+        imagePath: require('../../assets/features/mobile/31.jpg')
     },
     {
         alt: "Ручная работа с особым вниманием ко всем деталям",

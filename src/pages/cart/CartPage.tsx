@@ -1,14 +1,26 @@
 // noinspection JSUnresolvedLibraryURL, JSUnusedGlobalSymbols, HtmlUnknownTarget
 
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {Link} from "react-router-dom";
 import {useAppSelector} from "src/hooks/redux";
-import {useCheckAuthQuery, useCreateOrderMutation, useGetProductsQuery} from "src/store/api/spring.api";
+import {
+    useCheckAuthQuery,
+    useCreateOrderMutation,
+    useGetProductsQuery, useLazyCalculateOrderQuery
+} from "src/store/api/spring.api";
 import {motion} from "framer-motion";
 
 import {
-    CartItem, Product, ProductSize, OrderRequestDTO, StringFormFieldState, OrderCreateResponseDTO, Customer, AuthState,
+    CartItem,
+    Product,
+    ProductSize,
+    OrderRequestDTO,
+    StringFormFieldState,
+    OrderCreateResponseDTO,
+    Customer,
+    AuthState,
+    PromoStatus,
 } from "src/types/interfaces";
 import {Helmet} from "react-helmet";
 import {useActions} from "src/hooks/actions";
@@ -29,7 +41,36 @@ function CartPage() {
     const [fullName, setFullName] = useState<StringFormFieldState>({value: "", valid: true});
     const [phone, setPhone] = useState<StringFormFieldState>({value: "", valid: true});
     const [pvz, setPvz] = useState<{ id: string, address: string, valid: boolean }>({id: "", address: "", valid: true});
+    const [promoName, setPromoName] = useState<StringFormFieldState>({value: "", valid: true});
     const [oldCustomerId, setOldCustomerId] = useState<number>(0);
+    const [allStateReady, setAllStateReady] = useState<boolean>(false);
+
+    if (products && fullName && pvz && !allStateReady) {
+        setAllStateReady(true);
+    }
+
+    const calculateCart = (): OrderRequestDTO => {
+        const sizesList: number[] = [];
+        if (products) {
+            cartItems.forEach(item => {
+                const product = products.find(product => item.productId === product.id) as Product;
+                item.sizes.forEach(size => {
+                    sizesList.push(...Array(size.count).fill(size.id));
+                })
+            });
+        }
+        return {
+            fullName: fullName.value.trim(),
+            phone: phone.value.trim(),
+            deliveryAddress: pvz.address.trim(),
+            selectedSizes: sizesList,
+            promoName: promoName.value.trim()
+        };
+    }
+
+    const [updPriceTrigger, {data: calculatedOrder}] = useLazyCalculateOrderQuery();
+    useEffect(() => {updPriceTrigger(calculateCart())},
+        [allStateReady, cartItems]);
 
     if (customer && customer.id != oldCustomerId) {
         setFullName({value: customer.defaultFullName ? customer.defaultFullName : "", valid: true});
@@ -40,27 +81,6 @@ function CartPage() {
 
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
     const toggleModal = (state: boolean) => setModalIsOpen(state);
-
-    const calculateCart = (): OrderRequestDTO => {
-        const sizesList: number[] = [];
-        let productsAmount = 0;
-        if (products) {
-            cartItems.forEach(item => {
-                const product = products.find(product => item.productId === product.id) as Product;
-                item.sizes.forEach(size => {
-                    productsAmount += size.count * product.price;
-                    sizesList.push(...Array(size.count).fill(size.id));
-                })
-            });
-        }
-        return {
-            amount: productsAmount,
-            fullName: fullName.value.trim(),
-            phone: phone.value.trim(),
-            deliveryAddress: pvz.address.trim(),
-            selectedSizes: sizesList
-        };
-    }
 
     const validateForm = (): boolean => {
         const fullNameValid = fullName.value.length > 0;
@@ -95,11 +115,11 @@ function CartPage() {
                      exit={{opacity: 0}}
         >
             <Helmet>
-                <title>Корзина: нет товаров - AikiShoes</title>
+                <title>Корзина - AikiShoes</title>
                 <meta name="description"
                       content="Корзина: все ваши выбранные товары готовы к оформлению."/>
                 <link rel="canonical" href="https://aikishoes.ru/cart"/>
-                <script type="text/javascript" src="https://points.boxberry.de/js/boxberry.js"/>
+                {/*<script type="text/javascript" src="https://points.boxberry.de/js/boxberry.js"/>*/}
             </Helmet>
             <div className="container">
                 <h1 className="cartPage__title">Корзина</h1>
@@ -123,7 +143,7 @@ function CartPage() {
                                                 }
                                             }
                                             const plusHandler = (): void => {
-                                                if (size && productSize && size.count < Math.min(productSize.count, 5)) {
+                                                if (size && productSize && size.count < Math.min(productSize.count, 2)) {
                                                     incrementSize({
                                                         productId: product.id,
                                                         article: size.article,
@@ -230,34 +250,69 @@ function CartPage() {
                                 className={`checkout__input form-input ${phone.valid ? "" : "validateFailed"}`}
                                 placeholder="Телефон"
                             />
+                            <input type="text"
+                                   disabled={!isAuthorized}
+                                   value={pvz.address}
+                                   onChange={(event) => setPvz({
+                                       id: "-1",
+                                       address: event.target.value,
+                                       valid: true
+                                   })}
+                                   placeholder="Адрес доставки"
+                                   className={`checkout__input form-input ${pvz.valid ? "" : "validateFailed"}`}/>
 
-                            <div className={isAuthorized ? "pointer" : ""}
-                                 onClick={() => {
-                                     if (isAuthorized) {
-                                         window.boxberry.open((result: BoxberryResult): void => {
-                                             setPvz({
-                                                 id: result.id,
-                                                 address: result.address,
-                                                 valid: true
-                                             })
-                                         });
-                                     }
-                                 }}>
-                                <input id="pvz-address" type="text"
-                                       disabled={true}
-                                       placeholder="Выбрать пункт выдачи"
-                                       className={`checkout__input form-input ${pvz.valid ? "" : "validateFailed"} ${isAuthorized ? "fake-active-input" : ""}`}
-                                       value={pvz.address}
-                                />
+                            <div className="checkout__input-btn-row">
+                                <input type="text"
+                                       disabled={!isAuthorized}
+                                       value={promoName.value}
+                                       onChange={(event) => setPromoName({
+                                           value: event.target.value,
+                                           valid: true
+                                       })}
+                                       placeholder="Промокод (если имеется)"
+                                       className={`checkout__input form-input ${promoName.valid ? "" : "validateFailed"}`}/>
+                                <button className="checkout__btn-row black-button"
+                                        onClick={() => updPriceTrigger(calculateCart())}
+                                >Применить</button>
                             </div>
+
+                            {/*<div className={isAuthorized ? "pointer" : ""}*/}
+                            {/*     onClick={() => {*/}
+                            {/*         if (isAuthorized) {*/}
+                            {/*             window.boxberry.open((result: BoxberryResult): void => {*/}
+                            {/*                 setPvz({*/}
+                            {/*                     id: result.id,*/}
+                            {/*                     address: result.address,*/}
+                            {/*                     valid: true*/}
+                            {/*                 })*/}
+                            {/*             });*/}
+                            {/*         }*/}
+                            {/*     }}>*/}
+                            {/*    <input id="pvz-address" type="text"*/}
+                            {/*           disabled={true}*/}
+                            {/*           placeholder="Выбрать пункт выдачи"*/}
+                            {/*           className={`checkout__input form-input ${pvz.valid ? "" : "validateFailed"} ${isAuthorized ? "fake-active-input" : ""}`}*/}
+                            {/*           value={pvz.address}*/}
+                            {/*    />*/}
+                            {/*</div>*/}
+
+                            {/*<p className="checkout__text">Пожалуйста, укажите полный адрес вашего дома.*/}
+                            {/*    Мы выберем ближайший пункт выдачи заказа (СДЭК / Почта России) и отправим посылку туда.*/}
+                            {/*    Информацию о доставке вы получите в виде смс/whatsapp/telegram, привязанных к вашему*/}
+                            {/*    номеру телефона. Доставка уже включена в стоимость заказа.</p>*/}
+
+                            {calculatedOrder && [PromoStatus.APPLIED, PromoStatus.APPLYING_ERROR].includes(calculatedOrder.promoStatus) && (
+                                <div className={calculatedOrder.promoStatus == PromoStatus.APPLIED ? "checkout__price" : "checkout__error-message"}>{calculatedOrder.infoMessage}</div>
+                            )}
 
                             {error && (
                                 <div className="checkout__error-message">{error}</div>
                             )}
 
                             <button className="checkout__button black-button"
-                                    onClick={checkoutHandler}>
-                                Оформить заказ
+                                    onClick={checkoutHandler}
+                                    disabled={!calculatedOrder}>
+                                Оформить заказ{calculatedOrder && (": " + displayPrice(calculatedOrder.finalAmount) +  "₽")}
                             </button>
                         </section>
                     </div>

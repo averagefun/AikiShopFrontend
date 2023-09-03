@@ -1,5 +1,12 @@
 import {MapperConfiguration, MappingPair} from "@dynamic-mapper/mapper";
-import {Order, OrderResponseDTO, OrderStatus} from "./interfaces";
+import {
+    Order,
+    OrderCalculateResponse,
+    OrderCalculateResponseDTO,
+    OrderResponseDTO,
+    OrderStatus,
+    PromoStatus
+} from "./interfaces";
 
 // orderResponseDtoToOrder
 export const orderResponseDtoToOrder = new MappingPair<OrderResponseDTO, Order>();
@@ -11,3 +18,12 @@ const configOrderResponseDtoToOrder = new MapperConfiguration(cfg => {
     });
 });
 export const mapperOrderResponseDtoToOrder = configOrderResponseDtoToOrder.createMapper();
+
+// orderCalculateResponseDtoToOrderCalculateResponse
+export const orderCalculateResponseDtoToOrderCalculateResponse = new MappingPair<OrderCalculateResponseDTO, OrderCalculateResponse>();
+const configOrderCalculateResponseDtoToOrderCalculateResponse = new MapperConfiguration(cfg => {
+    cfg.createAutoMap(orderCalculateResponseDtoToOrderCalculateResponse, {
+        promoStatus: opt => opt.mapFrom(src => PromoStatus[src.promoStatus as keyof typeof PromoStatus])
+    });
+});
+export const mapperOrderCalculateResponseDtoToOrderCalculateResponse = configOrderCalculateResponseDtoToOrderCalculateResponse.createMapper();

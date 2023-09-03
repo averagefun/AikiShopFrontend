@@ -7,10 +7,14 @@ import {
     OrderCreateResponseDTO,
     OrderRequestDTO,
     OrderResponseDTO,
-    Product, Customer, MessageDTO, AuthState
+    Product, Customer, MessageDTO, AuthState, OrderCalculateResponseDTO, OrderCalculateResponse
 }
     from "src/types/interfaces";
-import {mapperOrderResponseDtoToOrder, orderResponseDtoToOrder} from "src/types/mappers";
+import {
+    mapperOrderCalculateResponseDtoToOrderCalculateResponse,
+    mapperOrderResponseDtoToOrder, orderCalculateResponseDtoToOrderCalculateResponse,
+    orderResponseDtoToOrder
+} from "src/types/mappers";
 
 const jwtToken = () => localStorage.getItem("jwtToken");
 
@@ -71,6 +75,19 @@ export const springApi = createApi({
             }
 
         }),
+        calculateOrder: build.query<OrderCalculateResponse, OrderRequestDTO>({
+            query: (body) => ({
+                url: `/orders/calculate`,
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${jwtToken()}`
+                },
+                body
+            }),
+            transformResponse: (response: OrderCalculateResponseDTO): OrderCalculateResponse => {
+                return mapperOrderCalculateResponseDtoToOrderCalculateResponse.map(orderCalculateResponseDtoToOrderCalculateResponse, response);
+            }
+        }),
         createOrder: build.mutation<OrderCreateResponseDTO, OrderRequestDTO>({
             query: (body) => ({
                 url: "/orders/create",
@@ -100,6 +117,6 @@ export const springApi = createApi({
 export const {
     useGetProductsQuery, useGetProductQuery,
     useGeneratePasswordMutation, useLoginMutation,
-    useCheckAuthQuery,
+    useCheckAuthQuery, useLazyCalculateOrderQuery,
     useCreateOrderMutation, useGetOrdersQuery
 } = springApi;

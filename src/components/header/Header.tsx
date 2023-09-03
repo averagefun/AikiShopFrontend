@@ -49,7 +49,7 @@ function Header() {
                                 <li className="menu__item underline_anim">
                                     <NavLink
                                         onClick={mobileMenuActive ? displayMobileMenu : void (0)}
-                                        to="/contacts">Контакты
+                                        to="/contacts">О нас
                                     </NavLink>
                                 </li>
                                 <li className="menu__item underline_anim">

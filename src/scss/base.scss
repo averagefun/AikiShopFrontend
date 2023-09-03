@@ -233,13 +233,19 @@ input[type=number] {
 .black-button {
     background: $black;
     color: $white;
+    border: 1px $black solid;
     border-radius: 30px;
     padding: 14px 20px;
     font-size: rem(18);
+
+    &:hover {
+        color: $black;
+        background: $white;
+        transition: background-color 0.15s;
+    }
 }
 
 // Forms
-
 .form-input {
     width: 100%;
     display: block;

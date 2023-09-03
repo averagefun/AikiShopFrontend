@@ -65,16 +65,35 @@ export interface LoginResponse {
 
 // ** ORDERS **
 
+export interface OrderCalculateResponseDTO {
+    defaultAmount: number;
+    promoStatus: string;
+    infoMessage: string;
+    finalAmount: number;
+}
+
+export enum PromoStatus {
+    NOT_SPECIFIED, APPLYING_ERROR, APPLIED
+}
+
+export interface OrderCalculateResponse {
+    defaultAmount: number;
+    promoStatus: PromoStatus;
+    infoMessage: string;
+    finalAmount: number;
+}
+
 export interface OrderRequestDTO {
-    amount: number;
     fullName: string;
     phone: string;
     deliveryAddress: string;
     selectedSizes: number[];
+    promoName: string;
 }
 
 export interface OrderResponseDTO {
     id: number;
+    paymentUrl?: string;
     creationTime: number[];
     amount: number;
     orderStatus: string;
@@ -90,17 +109,18 @@ export enum OrderStatus {
 export const FailedOrderStatuses = [OrderStatus.CANCELED, OrderStatus.PAYMENT_ERROR, OrderStatus.PAYMENT_RETURNED];
 
 export const OrderSatusLabel = new Map<number, string>([
-    [OrderStatus.WAITING_FOR_PAYMENT, "Ожидание оплаты"],
+    [OrderStatus.WAITING_FOR_PAYMENT, "Ожидание оплаты - нажмите, чтобы оплатить"],
     [OrderStatus.CANCELED, 'Отменен'],
     [OrderStatus.SUCCESSFULLY_PAID, 'Успешно оплачен - готовим к отправке'],
     [OrderStatus.PAYMENT_ERROR, 'Ошибка при оплате заказа'],
     [OrderStatus.PAYMENT_RETURNED, 'Возврат товара'],
-    [OrderStatus.DELIVERING, 'Доставляется'],
+    [OrderStatus.DELIVERING, 'Уже в пути'],
     [OrderStatus.DELIVERED, 'Успешно доставлен'],
 ]);
 
 export interface Order {
     id: number;
+    paymentUrl?: string;
     creationTime: Date;
     amount: number;
     orderStatus: OrderStatus;
