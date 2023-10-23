@@ -1,6 +1,5 @@
 import React from 'react';
 import {Helmet} from "react-helmet";
-import LoginModal from "src/components/modal/LoginModal";
 
 function ContactsPage() {
     return (

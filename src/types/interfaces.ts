@@ -76,6 +76,11 @@ export enum PromoStatus {
     NOT_SPECIFIED, APPLYING_ERROR, APPLIED
 }
 
+export interface OrderCalculateRequestDTO {
+    selectedSizes: number[];
+    promoName?: string;
+}
+
 export interface OrderCalculateResponse {
     defaultAmount: number;
     promoStatus: PromoStatus;

@@ -114,6 +114,11 @@ a {
     color: $black;
 }
 
+hr {
+    background: $black;
+    height: 1px;
+}
+
 // Common classes
 
 .black-price {
@@ -238,10 +243,17 @@ input[type=number] {
     padding: 14px 20px;
     font-size: rem(18);
 
-    &:hover {
+    &:hover:not(&:disabled) {
         color: $black;
         background: $white;
         transition: background-color 0.15s;
+    }
+
+    &:disabled {
+        background: $white;
+        color: $gray-trans;
+        border: 1px $gray-trans solid;
+        cursor: unset;
     }
 }
 

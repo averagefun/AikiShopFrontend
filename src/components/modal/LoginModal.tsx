@@ -52,15 +52,20 @@ function LoginModal(props: LoginModalProps) {
         }
     }
 
+    // prevent scrolling
+    document.body.style.overflow = props.isOpen ? "hidden" : "unset";
+
     return (
         <div>
             <Modal
+                preventScroll={true}
+                appElement={document.querySelector("body") as HTMLElement}
                 isOpen={props.isOpen}
                 onRequestClose={() => props.toggle(false)}
                 className="loginModal"
                 overlayClassName="loginModal__overlay"
             >
-                <section className="cartPage__checkout checkout">
+                <section className="loginModal__checkout checkout">
                     <h2 className="loginModal__title">Войдите в аккаунт</h2>
 
                     <input type="email"

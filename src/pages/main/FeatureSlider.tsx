@@ -66,6 +66,22 @@ const featureSliderMobile: FeatureSlide[] = [
     {
         alt: "Aiki Shoes - гарантия качества и комфорта",
         imagePath: require('../../assets/features/mobile/35.jpg')
+    },
+    {
+        alt: "Aiki Shoes - лучшая обувь для осени",
+        imagePath: require('../../assets/features/mobile/70.jpg')
+    },
+    {
+        alt: "Aiki Black - ботинки для стильных людей",
+        imagePath: require('../../assets/features/mobile/72.jpg')
+    },
+    {
+        alt: "Осенняя распродажа AikiShoes",
+        imagePath: require('../../assets/features/mobile/73.jpg')
+    },
+    {
+        alt: "Мужские ботинки Aiki Black из натуральной кожи",
+        imagePath: require('../../assets/features/mobile/74.jpg')
     }
 ]
 

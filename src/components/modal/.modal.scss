@@ -7,7 +7,7 @@
   background: $white;
 
   &__overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -36,4 +36,11 @@
   }
 
   &__input {}
+
+  &__checkout {
+    min-width: 400px !important;
+    @media screen and (max-width: $mb) {
+      min-width: 80vw !important;
+    }
+  }
 }

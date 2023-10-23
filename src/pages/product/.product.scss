@@ -1,6 +1,10 @@
 .productPage {
   padding: 12px 0 20px;
 
+  &__hr {
+    margin: 20px 0;
+  }
+
   &__title {
     font-size: rem(30);
     font-weight: 700;
@@ -303,6 +307,13 @@
 
 .sizeChooser {
   margin-top: rem(20);
+  display: flex;
+  flex-direction: row;
+  column-gap: rem(20);
+
+  @media screen and (max-width: $tb) {
+    flex-direction: column;
+  }
 
   &__measure {}
 
@@ -320,7 +331,16 @@
   }
 
   &__table {
-    max-width: 500px;
+    min-width: 600px;
+
+    @media screen and (max-width: $lp) {
+      min-width: 450px;
+    }
+
+    @media screen and (max-width: $tb) {
+      min-width: unset;
+    }
+
     text-align: center;
     border-collapse: collapse;
     border-radius: 1em;

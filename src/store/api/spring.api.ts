@@ -1,18 +1,24 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {
+    AuthState,
+    Customer,
     LoginDTO,
-    RegisterDTO,
     LoginResponse,
+    MessageDTO,
     Order,
+    OrderCalculateRequestDTO,
+    OrderCalculateResponse,
+    OrderCalculateResponseDTO,
     OrderCreateResponseDTO,
     OrderRequestDTO,
     OrderResponseDTO,
-    Product, Customer, MessageDTO, AuthState, OrderCalculateResponseDTO, OrderCalculateResponse
-}
-    from "src/types/interfaces";
+    Product,
+    RegisterDTO
+} from "src/types/interfaces";
 import {
     mapperOrderCalculateResponseDtoToOrderCalculateResponse,
-    mapperOrderResponseDtoToOrder, orderCalculateResponseDtoToOrderCalculateResponse,
+    mapperOrderResponseDtoToOrder,
+    orderCalculateResponseDtoToOrderCalculateResponse,
     orderResponseDtoToOrder
 } from "src/types/mappers";
 
@@ -75,7 +81,7 @@ export const springApi = createApi({
             }
 
         }),
-        calculateOrder: build.query<OrderCalculateResponse, OrderRequestDTO>({
+        calculateOrder: build.query<OrderCalculateResponse, OrderCalculateRequestDTO>({
             query: (body) => ({
                 url: `/orders/calculate`,
                 method: "POST",
@@ -117,6 +123,6 @@ export const springApi = createApi({
 export const {
     useGetProductsQuery, useGetProductQuery,
     useGeneratePasswordMutation, useLoginMutation,
-    useCheckAuthQuery, useLazyCalculateOrderQuery,
+    useCheckAuthQuery, useCalculateOrderQuery,
     useCreateOrderMutation, useGetOrdersQuery
 } = springApi;

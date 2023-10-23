@@ -64,6 +64,9 @@ function ProductPage() {
                                          productSizes={sizes}/>
                         </div>
                     </section>
+
+                    <hr className="productPage__hr"/>
+
                     <ProductSizeChooser className="productPage__sizeChooser" />
                 </div>
             </motion.main>

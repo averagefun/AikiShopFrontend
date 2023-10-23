@@ -106,6 +106,54 @@ function ProductSizeChooser(props: ProductSizeChooserProps) {
                         254 - 258
                     </div>
                 </div>
+
+                <div className="sizeChooser__table-row">
+                    <div className="sizeChooser__table-cell" data-title="Российский размер">
+                        41
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стельки, мм">
+                        265
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стопы (одетая в носок), мм">
+                        259 - 263
+                    </div>
+                </div>
+
+                <div className="sizeChooser__table-row">
+                    <div className="sizeChooser__table-cell" data-title="Российский размер">
+                        42
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стельки, мм">
+                        270
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стопы (одетая в носок), мм">
+                        264 - 268
+                    </div>
+                </div>
+
+                <div className="sizeChooser__table-row">
+                    <div className="sizeChooser__table-cell" data-title="Российский размер">
+                        43
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стельки, мм">
+                        275
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стопы (одетая в носок), мм">
+                        269 - 273
+                    </div>
+                </div>
+
+                <div className="sizeChooser__table-row">
+                    <div className="sizeChooser__table-cell" data-title="Российский размер">
+                        44
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стельки, мм">
+                        280
+                    </div>
+                    <div className="sizeChooser__table-cell" data-title="Длина стопы (одетая в носок), мм">
+                        274 - 278
+                    </div>
+                </div>
             </div>
         </section>
     )

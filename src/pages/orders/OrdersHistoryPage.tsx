@@ -63,7 +63,7 @@ function OrdersHistoryPage() {
                                                         №{`${order.id} от ${formatDate(order.creationTime)}`}</div>
                                                     <div
                                                         className="order__status">{
-                                                        (order.orderStatus == OrderStatus.WAITING_FOR_PAYMENT && order.paymentUrl) ?
+                                                        (order.orderStatus === OrderStatus.WAITING_FOR_PAYMENT && order.paymentUrl) ?
                                                             (
                                                                 <a className="underline_anim" href={order.paymentUrl}>{OrderSatusLabel.get(order.orderStatus)}</a>
                                                             ) :
@@ -73,7 +73,7 @@ function OrdersHistoryPage() {
                                                             {[...new Map(order.selectedSizes.map(size => [size.id, size])).values()]
                                                                 .sort((size1, size2) => size2.id - size1.id)
                                                                 .map(size => {
-                                                                    const product = products.find(product => product.sizes.find(productSize => productSize.id == size.id)) as Product;
+                                                                    const product = products.find(product => product.sizes.find(productSize => productSize.id === size.id)) as Product;
                                                                     return (
                                                                         <li key={size.id} className="order__size">
                                                                             {`${product.name}, ${size.size} размер, 

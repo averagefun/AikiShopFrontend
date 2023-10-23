@@ -1,26 +1,27 @@
 // noinspection JSUnresolvedLibraryURL, JSUnusedGlobalSymbols, HtmlUnknownTarget
 
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useState} from 'react';
 
 import {Link} from "react-router-dom";
 import {useAppSelector} from "src/hooks/redux";
 import {
+    useCalculateOrderQuery,
     useCheckAuthQuery,
     useCreateOrderMutation,
-    useGetProductsQuery, useLazyCalculateOrderQuery
+    useGetProductsQuery
 } from "src/store/api/spring.api";
 import {motion} from "framer-motion";
 
 import {
-    CartItem,
-    Product,
-    ProductSize,
-    OrderRequestDTO,
-    StringFormFieldState,
-    OrderCreateResponseDTO,
-    Customer,
     AuthState,
+    CartItem,
+    Customer,
+    OrderCalculateRequestDTO,
+    OrderCreateResponseDTO,
+    OrderRequestDTO,
+    ProductSize,
     PromoStatus,
+    StringFormFieldState,
 } from "src/types/interfaces";
 import {Helmet} from "react-helmet";
 import {useActions} from "src/hooks/actions";
@@ -34,9 +35,10 @@ function CartPage() {
     const customer: Customer | null = isAuthorized ? (authState as AuthState).customer as Customer : null;
 
     const cartItems: CartItem[] = useAppSelector(state => state.cartStore.cart);
+    const promo: string | undefined = useAppSelector(state => state.cartStore.promo);
     const [createOrder] = useCreateOrderMutation();
     const {data: products} = useGetProductsQuery(null);
-    const {incrementSize, decrementSize, deleteSize} = useActions();
+    const {incrementSize, decrementSize, deleteSize, setPromo} = useActions();
 
     const [fullName, setFullName] = useState<StringFormFieldState>({value: "", valid: true});
     const [phone, setPhone] = useState<StringFormFieldState>({value: "", valid: true});
@@ -49,11 +51,32 @@ function CartPage() {
         setAllStateReady(true);
     }
 
-    const calculateCart = (): OrderRequestDTO => {
+    const getCalculateRequest = (): OrderCalculateRequestDTO => {
         const sizesList: number[] = [];
         if (products) {
             cartItems.forEach(item => {
-                const product = products.find(product => item.productId === product.id) as Product;
+                item.sizes.forEach(size => {
+                    sizesList.push(...Array(size.count).fill(size.id));
+                })
+            });
+        }
+
+        if (promo != undefined) {
+            return {
+                selectedSizes: sizesList,
+                promoName: promo
+            }
+        }
+
+        return {
+            selectedSizes: sizesList
+        };
+    }
+
+    const getOrder = (): OrderRequestDTO => {
+        const sizesList: number[] = [];
+        if (products) {
+            cartItems.forEach(item => {
                 item.sizes.forEach(size => {
                     sizesList.push(...Array(size.count).fill(size.id));
                 })
@@ -68,19 +91,17 @@ function CartPage() {
         };
     }
 
-    const [updPriceTrigger, {data: calculatedOrder}] = useLazyCalculateOrderQuery();
-    useEffect(() => {updPriceTrigger(calculateCart())},
-        [allStateReady, cartItems]);
+    const {data: calculatedOrder} = useCalculateOrderQuery(getCalculateRequest());
 
-    if (customer && customer.id != oldCustomerId) {
+    if (customer && customer.id !== oldCustomerId) {
         setFullName({value: customer.defaultFullName ? customer.defaultFullName : "", valid: true});
         setPhone({value: customer.defaultPhone ? customer.defaultPhone : "", valid: true});
         setPvz({id: "", address: customer.defaultDeliveryAddress ? customer.defaultDeliveryAddress : "", valid: true});
         setOldCustomerId(customer.id);
     }
 
-    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-    const toggleModal = (state: boolean) => setModalIsOpen(state);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const toggleModal = (state: boolean) => setIsModalOpen(state);
 
     const validateForm = (): boolean => {
         const fullNameValid = fullName.value.length > 0;
@@ -99,7 +120,7 @@ function CartPage() {
 
     const checkoutHandler = () => {
         if (validateForm()) {
-            createOrder(calculateCart())
+            createOrder(getOrder())
                 .unwrap()
                 .then((response: OrderCreateResponseDTO) => {
                     window.location.href = response.paymentUrl;
@@ -225,7 +246,7 @@ function CartPage() {
                                        className={`checkout__input form-input fake-active-input ${isAuthorized && authState && authState.customer ? "" : "validateFailed"}`}
                                 />
                             </div>
-                            <LoginModal isOpen={modalIsOpen} toggle={toggleModal} updateAuth={updateAuth}/>
+                            <LoginModal isOpen={isModalOpen} toggle={toggleModal} updateAuth={updateAuth}/>
 
                             <input type="text"
                                    disabled={!isAuthorized}
@@ -269,10 +290,11 @@ function CartPage() {
                                            value: event.target.value,
                                            valid: true
                                        })}
-                                       placeholder="Промокод (если имеется)"
+                                       placeholder="Промокод"
                                        className={`checkout__input form-input ${promoName.valid ? "" : "validateFailed"}`}/>
                                 <button className="checkout__btn-row black-button"
-                                        onClick={() => updPriceTrigger(calculateCart())}
+                                        onClick={() => setPromo(promoName.value)}
+                                        disabled={!promoName.valid}
                                 >Применить</button>
                             </div>
 
@@ -302,7 +324,7 @@ function CartPage() {
                             {/*    номеру телефона. Доставка уже включена в стоимость заказа.</p>*/}
 
                             {calculatedOrder && [PromoStatus.APPLIED, PromoStatus.APPLYING_ERROR].includes(calculatedOrder.promoStatus) && (
-                                <div className={calculatedOrder.promoStatus == PromoStatus.APPLIED ? "checkout__price" : "checkout__error-message"}>{calculatedOrder.infoMessage}</div>
+                                <div className={calculatedOrder.promoStatus === PromoStatus.APPLIED ? "checkout__price" : "checkout__error-message"}>{calculatedOrder.infoMessage}</div>
                             )}
 
                             {error && (
@@ -310,8 +332,7 @@ function CartPage() {
                             )}
 
                             <button className="checkout__button black-button"
-                                    onClick={checkoutHandler}
-                                    disabled={!calculatedOrder}>
+                                    onClick={checkoutHandler}>
                                 Оформить заказ{calculatedOrder && (": " + displayPrice(calculatedOrder.finalAmount) +  "₽")}
                             </button>
                         </section>

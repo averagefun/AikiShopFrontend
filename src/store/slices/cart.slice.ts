@@ -10,13 +10,18 @@ interface CartItemChangeEvent {
 
 interface CartState {
     cart: CartItem[];
+    promo?: string;
 }
 
 const cartProducts = localStorage.getItem("cartProducts") != null ?
     JSON.parse(localStorage.getItem("cartProducts") as string) as CartItem[] : []
 
+const initialPromo = localStorage.getItem("promo") != null ?
+    localStorage.getItem("promo") as string : undefined;
+
 const initialState: CartState = {
-    cart: cartProducts
+    cart: cartProducts,
+    promo: initialPromo
 };
 
 export const cartSlice = createSlice({
@@ -79,6 +84,10 @@ export const cartSlice = createSlice({
         deleteCart: (state) => {
             state.cart = [];
             localStorage.removeItem("cartProducts");
+        },
+        setPromo: (state, action: PayloadAction<string>) => {
+            state.promo = action.payload;
+            localStorage.setItem("promo", state.promo);
         }
     }
 })
